@@ -55,6 +55,61 @@
   color: #4b5563;
 }
 
+.events-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.events-list h2 {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.events-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.event-card {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.05);
+}
+
+.event-card h3 {
+  margin: 0 0 8px;
+  font-size: 1.1rem;
+}
+
+.event-card p {
+  margin: 4px 0;
+  color: #4b5563;
+}
+
+.category-badge {
+  display: inline-block;
+  background: #eff6ff;
+  color: #2563eb;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  padding: 2px 8px;
+  border-radius: 999px;
+  margin-bottom: 8px;
+}
+
+.child-tag {
+  display: inline-block;
+  margin-top: 8px;
+  font-size: 0.85rem;
+  color: #6b7280;
+}
+
 .list-state {
   padding: 24px;
   text-align: center;
