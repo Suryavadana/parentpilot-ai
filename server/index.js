@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import 'dotenv/config';
 import childrenRoutes from './routes/children.routes.js';
+import eventsRoutes from './routes/events.routes.js';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -14,6 +15,7 @@ app.get('/health', (req, res) => {
 });
 
 app.use('/api/children', childrenRoutes);
+app.use('/api/events', eventsRoutes);
 
 app.use((req, res) => {
   res.status(404).json({ error: 'Route not found' });
