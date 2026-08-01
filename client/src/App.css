@@ -20,6 +20,21 @@
   text-decoration: underline;
 }
 
+.logout-button {
+  background: none;
+  border: none;
+  color: #2563eb;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  margin-left: auto;
+}
+
+.logout-button:hover {
+  text-decoration: underline;
+}
+
 .children-list {
   display: flex;
   flex-direction: column;
