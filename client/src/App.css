@@ -232,3 +232,30 @@
   cursor: pointer;
   padding: 0;
 }
+
+.invite-link-box {
+  display: flex;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.invite-link-box input {
+  flex: 1;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  padding: 10px 12px;
+  font: inherit;
+  color: #4b5563;
+}
+
+.invite-link-box button {
+  border-radius: 8px;
+  border: none;
+  padding: 10px 12px;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  background: #2563eb;
+  color: white;
+  white-space: nowrap;
+}

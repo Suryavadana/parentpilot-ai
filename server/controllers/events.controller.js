@@ -32,7 +32,10 @@ const getEvents = async (req, res, next) => {
     const { childId } = req.query;
 
     const events = await client.event.findMany({
-      where: childId ? { childId } : undefined,
+      where: {
+        child: { familyId: req.familyId },
+        ...(childId ? { childId } : {}),
+      },
       orderBy: { startDate: 'asc' },
       include: {
         child: {
@@ -52,8 +55,8 @@ const getEventById = async (req, res, next) => {
     const { id } = req.params;
     const client = getPrismaClient();
 
-    const event = await client.event.findUnique({
-      where: { id },
+    const event = await client.event.findFirst({
+      where: { id, child: { familyId: req.familyId } },
     });
 
     if (!event) {
@@ -69,16 +72,27 @@ const getEventById = async (req, res, next) => {
 const createEvent = async (req, res, next) => {
   try {
     const client = getPrismaClient();
-    const { title, category, startDate, ...rest } = req.body;
+    const { title, category, startDate, childId, ...rest } = req.body;
 
     if (!title || !category || !startDate) {
       return res.status(400).json({ error: 'title, category and startDate are required' });
+    }
+
+    if (childId) {
+      const child = await client.child.findFirst({
+        where: { id: childId, familyId: req.familyId },
+      });
+
+      if (!child) {
+        return res.status(400).json({ error: 'Invalid childId' });
+      }
     }
 
     const eventData = normalizeEventData({
       title,
       category,
       startDate,
+      childId,
       ...rest,
     });
 
@@ -100,6 +114,24 @@ const updateEvent = async (req, res, next) => {
   try {
     const client = getPrismaClient();
     const { id } = req.params;
+
+    const existingEvent = await client.event.findFirst({
+      where: { id, child: { familyId: req.familyId } },
+    });
+
+    if (!existingEvent) {
+      return res.status(404).json({ error: 'Event not found' });
+    }
+
+    if (req.body.childId) {
+      const child = await client.child.findFirst({
+        where: { id: req.body.childId, familyId: req.familyId },
+      });
+
+      if (!child) {
+        return res.status(400).json({ error: 'Invalid childId' });
+      }
+    }
 
     const data = normalizeEventData({ ...req.body });
 
@@ -126,6 +158,14 @@ const deleteEvent = async (req, res, next) => {
   try {
     const client = getPrismaClient();
     const { id } = req.params;
+
+    const existingEvent = await client.event.findFirst({
+      where: { id, child: { familyId: req.familyId } },
+    });
+
+    if (!existingEvent) {
+      return res.status(404).json({ error: 'Event not found' });
+    }
 
     await client.event.delete({
       where: { id },

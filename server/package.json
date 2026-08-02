@@ -4,14 +4,27 @@
   "description": "",
   "type": "module",
   "main": "index.js",
-  "scripts": {
-    "start": "node --experimental-strip-types index.js",
-    "dev": "nodemon --experimental-strip-types index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
+ "scripts": {
+  "start": "node --experimental-strip-types index.js",
+  "dev": "nodemon --experimental-strip-types index.js",
+  "test": "echo \"Error: no test specified\" && exit 1",
+  "db:sync": "prisma db push && prisma generate",
+  "db:seed": "node prisma/seed.js",
+  "db:reset": "prisma db push --force-reset && prisma generate && npm run db:seed"
+},
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "nodemonConfig": {
+    "watch": [
+      "index.js",
+      "controllers",
+      "routes",
+      "middleware",
+      "lib"
+    ],
+    "ext": "js"
+  },
   "dependencies": {
     "@prisma/adapter-pg": "^7.9.1",
     "@prisma/client": "^7.9.1",

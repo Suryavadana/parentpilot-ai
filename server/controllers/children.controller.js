@@ -20,6 +20,7 @@ const getChildren = async (req, res, next) => {
   try {
     const client = getPrismaClient();
     const children = await client.child.findMany({
+      where: { familyId: req.familyId },
       orderBy: { createdAt: 'desc' },
     });
 
@@ -34,8 +35,8 @@ const getChildById = async (req, res, next) => {
     const { id } = req.params;
     const client = getPrismaClient();
 
-    const child = await client.child.findUnique({
-      where: { id },
+    const child = await client.child.findFirst({
+      where: { id, familyId: req.familyId },
     });
 
     if (!child) {
@@ -51,7 +52,7 @@ const getChildById = async (req, res, next) => {
 const createChild = async (req, res, next) => {
   try {
     const client = getPrismaClient();
-    const { fullName, dateOfBirth, ...rest } = req.body;
+    const { fullName, dateOfBirth, familyId, ...rest } = req.body;
 
     if (!fullName || !dateOfBirth) {
       return res.status(400).json({ error: 'fullName and dateOfBirth are required' });
@@ -61,6 +62,7 @@ const createChild = async (req, res, next) => {
       fullName,
       dateOfBirth,
       ...rest,
+      familyId: req.familyId,
     });
 
     const child = await client.child.create({
@@ -82,7 +84,16 @@ const updateChild = async (req, res, next) => {
     const client = getPrismaClient();
     const { id } = req.params;
 
-    const data = normalizeChildData({ ...req.body });
+    const existingChild = await client.child.findFirst({
+      where: { id, familyId: req.familyId },
+    });
+
+    if (!existingChild) {
+      return res.status(404).json({ error: 'Child not found' });
+    }
+
+    const { familyId, ...rest } = req.body;
+    const data = normalizeChildData(rest);
 
     const child = await client.child.update({
       where: { id },
@@ -107,6 +118,14 @@ const deleteChild = async (req, res, next) => {
   try {
     const client = getPrismaClient();
     const { id } = req.params;
+
+    const existingChild = await client.child.findFirst({
+      where: { id, familyId: req.familyId },
+    });
+
+    if (!existingChild) {
+      return res.status(404).json({ error: 'Child not found' });
+    }
 
     await client.child.delete({
       where: { id },

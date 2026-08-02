@@ -5,17 +5,10 @@ const AuthContext = createContext(null);
 
 const TOKEN_KEY = 'token';
 
-const decodeToken = (token) => {
-  try {
-    const payload = token.split('.')[1];
-    return JSON.parse(atob(payload));
-  } catch (err) {
-    return null;
-  }
-};
-
 function AuthProvider({ children }) {
   const [token, setToken] = useState(() => localStorage.getItem(TOKEN_KEY));
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(Boolean(localStorage.getItem(TOKEN_KEY)));
 
   useEffect(() => {
     const requestInterceptor = axios.interceptors.request.use((config) => {
@@ -34,6 +27,7 @@ function AuthProvider({ children }) {
         if (error.response?.status === 401) {
           localStorage.removeItem(TOKEN_KEY);
           setToken(null);
+          setUser(null);
           window.location.href = '/login';
         }
 
@@ -46,6 +40,38 @@ function AuthProvider({ children }) {
       axios.interceptors.response.eject(responseInterceptor);
     };
   }, []);
+
+  useEffect(() => {
+    if (!token) {
+      setUser(null);
+      setLoading(false);
+      return undefined;
+    }
+
+    let cancelled = false;
+    setLoading(true);
+
+    axios.get('/api/auth/me')
+      .then((response) => {
+        if (!cancelled) {
+          setUser(response.data);
+        }
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setUser(null);
+        }
+      })
+      .finally(() => {
+        if (!cancelled) {
+          setLoading(false);
+        }
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [token]);
 
   const login = async (email, password) => {
     const response = await axios.post('/api/auth/login', { email, password });
@@ -62,12 +88,28 @@ function AuthProvider({ children }) {
   const logout = () => {
     localStorage.removeItem(TOKEN_KEY);
     setToken(null);
+    setUser(null);
   };
 
-  const user = token ? decodeToken(token) : null;
+  const generateInvite = async (role) => {
+    const response = await axios.post('/api/auth/invite', { role });
+    return response.data.inviteToken;
+  };
+
+  const joinFamily = async (inviteToken, email, password, fullName) => {
+    const response = await axios.post('/api/auth/join', {
+      inviteToken, email, password, fullName,
+    });
+    localStorage.setItem(TOKEN_KEY, response.data.token);
+    setToken(response.data.token);
+  };
 
   return (
-    <AuthContext.Provider value={{ token, user, login, signup, logout }}>
+    <AuthContext.Provider
+      value={{
+        token, user, loading, login, signup, logout, generateInvite, joinFamily,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );
