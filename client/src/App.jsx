@@ -6,6 +6,8 @@ import EventsList from './components/EventsList';
 import EventForm from './components/EventForm';
 import LoginForm from './components/LoginForm';
 import SignupForm from './components/SignupForm';
+import InvitePage from './components/InvitePage';
+import JoinPage from './components/JoinPage';
 import ProtectedRoute from './components/ProtectedRoute';
 import { AuthProvider, useAuth } from './context/AuthContext';
 
@@ -38,9 +40,12 @@ function AppShell() {
         <Link to="/events">Events</Link>
         <Link to="/add-event">Add event</Link>
         {token ? (
-          <button type="button" className="logout-button" onClick={handleLogout}>
-            Log out
-          </button>
+          <>
+            <Link to="/invite">Invite</Link>
+            <button type="button" className="logout-button" onClick={handleLogout}>
+              Log out
+            </button>
+          </>
         ) : (
           <>
             <Link to="/login">Log in</Link>
@@ -52,6 +57,15 @@ function AppShell() {
       <Routes>
         <Route path="/login" element={<LoginForm />} />
         <Route path="/signup" element={<SignupForm />} />
+        <Route path="/join" element={<JoinPage />} />
+        <Route
+          path="/invite"
+          element={(
+            <ProtectedRoute>
+              <InvitePage />
+            </ProtectedRoute>
+          )}
+        />
         <Route
           path="/"
           element={(

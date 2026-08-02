@@ -5,6 +5,7 @@ import childrenRoutes from './routes/children.routes.js';
 import eventsRoutes from './routes/events.routes.js';
 import authRoutes from './routes/auth.routes.js';
 import requireAuth from './middleware/requireAuth.js';
+import attachFamily from './middleware/attachFamily.js';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -17,8 +18,9 @@ app.get('/health', (req, res) => {
 });
 
 app.use('/api/auth', authRoutes);
-app.use('/api/children', requireAuth, childrenRoutes);
-app.use('/api/events', requireAuth, eventsRoutes);
+
+app.use('/api/children', requireAuth, attachFamily, childrenRoutes);
+app.use('/api/events', requireAuth, attachFamily, eventsRoutes);
 
 app.use((req, res) => {
   res.status(404).json({ error: 'Route not found' });
