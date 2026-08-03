@@ -34,46 +34,50 @@ function SignupForm() {
   };
 
   return (
-    <section className="child-form-card">
-      <h2>Sign up</h2>
+    <div className="auth-page">
+      <section className="auth-card">
+        <span className="auth-icon" aria-hidden="true">🎉</span>
+        <h2>Join ParentPilot</h2>
+        <p className="auth-subtitle">Create an account to start organizing family life.</p>
 
-      {error ? <p className="form-message error">{error}</p> : null}
+        {error ? <p className="form-message error">{error}</p> : null}
 
-      <form className="child-form" onSubmit={handleSubmit}>
-        <label>
-          Full name
-          <input
-            value={fullName}
-            onChange={(event) => setFullName(event.target.value)}
-            required
-          />
-        </label>
+        <form className="auth-form" onSubmit={handleSubmit}>
+          <label>
+            Full name
+            <input
+              value={fullName}
+              onChange={(event) => setFullName(event.target.value)}
+              required
+            />
+          </label>
 
-        <label>
-          Email
-          <input
-            type="email"
-            value={email}
-            onChange={(event) => setEmail(event.target.value)}
-            required
-          />
-        </label>
+          <label>
+            Email
+            <input
+              type="email"
+              value={email}
+              onChange={(event) => setEmail(event.target.value)}
+              required
+            />
+          </label>
 
-        <label>
-          Password
-          <input
-            type="password"
-            value={password}
-            onChange={(event) => setPassword(event.target.value)}
-            required
-          />
-        </label>
+          <label>
+            Password
+            <input
+              type="password"
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
+              required
+            />
+          </label>
 
-        <button type="submit" disabled={submitting}>
-          {submitting ? 'Signing up...' : 'Sign up'}
-        </button>
-      </form>
-    </section>
+          <button type="submit" disabled={submitting}>
+            {submitting ? 'Signing up...' : 'Sign up'}
+          </button>
+        </form>
+      </section>
+    </div>
   );
 }
 

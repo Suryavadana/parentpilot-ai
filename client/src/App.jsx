@@ -1,15 +1,26 @@
-import { BrowserRouter, Link, Route, Routes, useNavigate, useParams } from 'react-router-dom';
+import { BrowserRouter, Route, Routes, useParams } from 'react-router-dom';
 import './App.css';
 import ChildrenList from './components/ChildrenList';
 import ChildForm from './components/ChildForm';
 import EventsList from './components/EventsList';
 import EventForm from './components/EventForm';
+import HomeworkList from './components/HomeworkList';
+import HomeworkForm from './components/HomeworkForm';
+import FeesList from './components/FeesList';
+import FeeForm from './components/FeeForm';
+import DailyScheduleGrid from './components/DailyScheduleGrid';
+import AnnouncementsPanel from './components/AnnouncementsPanel';
+import ActivitiesPanel from './components/ActivitiesPanel';
+import ChildProfile from './components/ChildProfile';
+import Header from './components/Header';
+import AppLayout from './components/AppLayout';
 import LoginForm from './components/LoginForm';
 import SignupForm from './components/SignupForm';
 import InvitePage from './components/InvitePage';
 import JoinPage from './components/JoinPage';
 import ProtectedRoute from './components/ProtectedRoute';
-import { AuthProvider, useAuth } from './context/AuthContext';
+import { AuthProvider } from './context/AuthContext';
+import { ChildProvider } from './context/ChildContext';
 
 function EditChildRoute() {
   const { id } = useParams();
@@ -23,46 +34,33 @@ function EditEventRoute() {
   return <EventForm eventId={id} />;
 }
 
+function EditHomeworkRoute() {
+  const { id } = useParams();
+
+  return <HomeworkForm homeworkId={id} />;
+}
+
+function EditFeeRoute() {
+  const { id } = useParams();
+
+  return <FeeForm feeId={id} />;
+}
+
 function AppShell() {
-  const { token, logout } = useAuth();
-  const navigate = useNavigate();
-
-  const handleLogout = () => {
-    logout();
-    navigate('/login');
-  };
-
   return (
-    <main className="app-shell">
-      <nav className="top-nav">
-        <Link to="/">Children</Link>
-        <Link to="/add">Add child</Link>
-        <Link to="/events">Events</Link>
-        <Link to="/add-event">Add event</Link>
-        {token ? (
-          <>
-            <Link to="/invite">Invite</Link>
-            <button type="button" className="logout-button" onClick={handleLogout}>
-              Log out
-            </button>
-          </>
-        ) : (
-          <>
-            <Link to="/login">Log in</Link>
-            <Link to="/signup">Sign up</Link>
-          </>
-        )}
-      </nav>
-
+    <>
+      <Header />
       <Routes>
-        <Route path="/login" element={<LoginForm />} />
-        <Route path="/signup" element={<SignupForm />} />
-        <Route path="/join" element={<JoinPage />} />
+        <Route path="/login" element={<main className="app-shell"><LoginForm /></main>} />
+        <Route path="/signup" element={<main className="app-shell"><SignupForm /></main>} />
+        <Route path="/join" element={<main className="app-shell"><JoinPage /></main>} />
         <Route
           path="/invite"
           element={(
             <ProtectedRoute>
-              <InvitePage />
+              <AppLayout>
+                <InvitePage />
+              </AppLayout>
             </ProtectedRoute>
           )}
         />
@@ -70,7 +68,9 @@ function AppShell() {
           path="/"
           element={(
             <ProtectedRoute>
-              <ChildrenList />
+              <AppLayout>
+                <ChildrenList />
+              </AppLayout>
             </ProtectedRoute>
           )}
         />
@@ -78,7 +78,9 @@ function AppShell() {
           path="/add"
           element={(
             <ProtectedRoute>
-              <ChildForm />
+              <AppLayout>
+                <ChildForm />
+              </AppLayout>
             </ProtectedRoute>
           )}
         />
@@ -86,7 +88,19 @@ function AppShell() {
           path="/edit/:id"
           element={(
             <ProtectedRoute>
-              <EditChildRoute />
+              <AppLayout>
+                <EditChildRoute />
+              </AppLayout>
+            </ProtectedRoute>
+          )}
+        />
+        <Route
+          path="/children/:id"
+          element={(
+            <ProtectedRoute>
+              <AppLayout>
+                <ChildProfile />
+              </AppLayout>
             </ProtectedRoute>
           )}
         />
@@ -94,7 +108,9 @@ function AppShell() {
           path="/events"
           element={(
             <ProtectedRoute>
-              <EventsList />
+              <AppLayout>
+                <EventsList />
+              </AppLayout>
             </ProtectedRoute>
           )}
         />
@@ -102,7 +118,9 @@ function AppShell() {
           path="/add-event"
           element={(
             <ProtectedRoute>
-              <EventForm />
+              <AppLayout>
+                <EventForm />
+              </AppLayout>
             </ProtectedRoute>
           )}
         />
@@ -110,12 +128,104 @@ function AppShell() {
           path="/edit-event/:id"
           element={(
             <ProtectedRoute>
-              <EditEventRoute />
+              <AppLayout>
+                <EditEventRoute />
+              </AppLayout>
+            </ProtectedRoute>
+          )}
+        />
+        <Route
+          path="/homework"
+          element={(
+            <ProtectedRoute>
+              <AppLayout>
+                <HomeworkList />
+              </AppLayout>
+            </ProtectedRoute>
+          )}
+        />
+        <Route
+          path="/add-homework"
+          element={(
+            <ProtectedRoute>
+              <AppLayout>
+                <HomeworkForm />
+              </AppLayout>
+            </ProtectedRoute>
+          )}
+        />
+        <Route
+          path="/edit-homework/:id"
+          element={(
+            <ProtectedRoute>
+              <AppLayout>
+                <EditHomeworkRoute />
+              </AppLayout>
+            </ProtectedRoute>
+          )}
+        />
+        <Route
+          path="/fees"
+          element={(
+            <ProtectedRoute>
+              <AppLayout>
+                <FeesList />
+              </AppLayout>
+            </ProtectedRoute>
+          )}
+        />
+        <Route
+          path="/add-fee"
+          element={(
+            <ProtectedRoute>
+              <AppLayout>
+                <FeeForm />
+              </AppLayout>
+            </ProtectedRoute>
+          )}
+        />
+        <Route
+          path="/edit-fee/:id"
+          element={(
+            <ProtectedRoute>
+              <AppLayout>
+                <EditFeeRoute />
+              </AppLayout>
+            </ProtectedRoute>
+          )}
+        />
+        <Route
+          path="/calendar"
+          element={(
+            <ProtectedRoute>
+              <AppLayout>
+                <DailyScheduleGrid />
+              </AppLayout>
+            </ProtectedRoute>
+          )}
+        />
+        <Route
+          path="/announcements"
+          element={(
+            <ProtectedRoute>
+              <AppLayout>
+                <AnnouncementsPanel />
+              </AppLayout>
+            </ProtectedRoute>
+          )}
+        />
+        <Route
+          path="/activities"
+          element={(
+            <ProtectedRoute>
+              <AppLayout>
+                <ActivitiesPanel />
+              </AppLayout>
             </ProtectedRoute>
           )}
         />
       </Routes>
-    </main>
+    </>
   );
 }
 
@@ -123,7 +233,9 @@ function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
-        <AppShell />
+        <ChildProvider>
+          <AppShell />
+        </ChildProvider>
       </AuthProvider>
     </BrowserRouter>
   );

@@ -33,7 +33,7 @@ const getEvents = async (req, res, next) => {
 
     const events = await client.event.findMany({
       where: {
-        child: { familyId: req.familyId },
+        familyId: req.familyId,
         ...(childId ? { childId } : {}),
       },
       orderBy: { startDate: 'asc' },
@@ -56,7 +56,7 @@ const getEventById = async (req, res, next) => {
     const client = getPrismaClient();
 
     const event = await client.event.findFirst({
-      where: { id, child: { familyId: req.familyId } },
+      where: { id, familyId: req.familyId },
     });
 
     if (!event) {
@@ -94,6 +94,7 @@ const createEvent = async (req, res, next) => {
       startDate,
       childId,
       ...rest,
+      familyId: req.familyId,
     });
 
     const event = await client.event.create({
@@ -116,7 +117,7 @@ const updateEvent = async (req, res, next) => {
     const { id } = req.params;
 
     const existingEvent = await client.event.findFirst({
-      where: { id, child: { familyId: req.familyId } },
+      where: { id, familyId: req.familyId },
     });
 
     if (!existingEvent) {
@@ -133,7 +134,8 @@ const updateEvent = async (req, res, next) => {
       }
     }
 
-    const data = normalizeEventData({ ...req.body });
+    const { familyId, ...updateBody } = req.body;
+    const data = normalizeEventData({ ...updateBody });
 
     const event = await client.event.update({
       where: { id },
@@ -160,7 +162,7 @@ const deleteEvent = async (req, res, next) => {
     const { id } = req.params;
 
     const existingEvent = await client.event.findFirst({
-      where: { id, child: { familyId: req.familyId } },
+      where: { id, familyId: req.familyId },
     });
 
     if (!existingEvent) {

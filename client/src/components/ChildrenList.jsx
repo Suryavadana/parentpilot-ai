@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import ChildForm from './ChildForm';
 import '../App.css';
 
 const calculateAge = (dateOfBirth) => {
@@ -22,19 +23,20 @@ function ChildrenList() {
   const [children, setChildren] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [showAddForm, setShowAddForm] = useState(false);
+
+  const fetchChildren = async () => {
+    try {
+      const response = await axios.get('/api/children');
+      setChildren(response.data);
+    } catch (err) {
+      setError('Unable to load children right now.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchChildren = async () => {
-      try {
-        const response = await axios.get('/api/children');
-        setChildren(response.data);
-      } catch (err) {
-        setError('Unable to load children right now.');
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchChildren();
   }, []);
 
@@ -50,6 +52,11 @@ function ChildrenList() {
     }
   };
 
+  const handleChildAdded = () => {
+    setShowAddForm(false);
+    fetchChildren();
+  };
+
   if (loading) {
     return <div className="list-state">Loading children...</div>;
   }
@@ -58,33 +65,50 @@ function ChildrenList() {
     return <div className="list-state error">{error}</div>;
   }
 
-  if (children.length === 0) {
-    return <div className="list-state">No children added yet</div>;
-  }
+  const hasChildren = children.length > 0;
 
   return (
     <section className="children-list">
-      <h2>Children</h2>
-      <div className="children-grid">
-        {children.map((child) => (
-          <article key={child.id} className="child-card">
-            <h3>{child.fullName}</h3>
-            <p><strong>Age:</strong> {calculateAge(child.dateOfBirth)}</p>
-            <p><strong>School:</strong> {child.school || '—'}</p>
-            <p><strong>Grade:</strong> {child.grade || '—'}</p>
-            <div className="card-actions">
-              <Link to={`/edit/${child.id}`}>Edit</Link>
-              <button
-                type="button"
-                className="delete-button"
-                onClick={() => handleDelete(child.id, child.fullName)}
-              >
-                Delete
-              </button>
-            </div>
-          </article>
-        ))}
+      <div className="section-header">
+        <h2>Children</h2>
+        {hasChildren && (
+          <button
+            type="button"
+            className="toggle-form-button"
+            onClick={() => setShowAddForm((current) => !current)}
+          >
+            {showAddForm ? 'Cancel' : 'Add child'}
+          </button>
+        )}
       </div>
+
+      {(showAddForm || !hasChildren) && <ChildForm onSaved={handleChildAdded} />}
+
+      {hasChildren ? (
+        <div className="children-grid">
+          {children.map((child) => (
+            <article key={child.id} className="child-card">
+              <h3>{child.fullName}</h3>
+              <p><strong>Age:</strong> {calculateAge(child.dateOfBirth)}</p>
+              <p><strong>School:</strong> {child.school || '—'}</p>
+              <p><strong>Grade:</strong> {child.grade || '—'}</p>
+              <div className="card-actions">
+                <Link to={`/children/${child.id}`}>View profile</Link>
+                <Link to={`/edit/${child.id}`}>Edit</Link>
+                <button
+                  type="button"
+                  className="delete-button"
+                  onClick={() => handleDelete(child.id, child.fullName)}
+                >
+                  Delete
+                </button>
+              </div>
+            </article>
+          ))}
+        </div>
+      ) : (
+        <div className="list-state">No children added yet</div>
+      )}
     </section>
   );
 }

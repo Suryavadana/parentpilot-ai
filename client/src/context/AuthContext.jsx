@@ -5,22 +5,27 @@ const AuthContext = createContext(null);
 
 const TOKEN_KEY = 'token';
 
+// Registered at module scope (not inside a useEffect) so it's guaranteed to be
+// attached before any component's mount-time effect fires its first request.
+// useEffects run bottom-up on mount (children before parents), so a descendant
+// component's own data-fetching effect can otherwise race ahead of
+// AuthProvider's effect and go out with no Authorization header.
+axios.interceptors.request.use((config) => {
+  const storedToken = localStorage.getItem(TOKEN_KEY);
+
+  if (storedToken) {
+    config.headers.Authorization = `Bearer ${storedToken}`;
+  }
+
+  return config;
+});
+
 function AuthProvider({ children }) {
   const [token, setToken] = useState(() => localStorage.getItem(TOKEN_KEY));
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(Boolean(localStorage.getItem(TOKEN_KEY)));
 
   useEffect(() => {
-    const requestInterceptor = axios.interceptors.request.use((config) => {
-      const storedToken = localStorage.getItem(TOKEN_KEY);
-
-      if (storedToken) {
-        config.headers.Authorization = `Bearer ${storedToken}`;
-      }
-
-      return config;
-    });
-
     const responseInterceptor = axios.interceptors.response.use(
       (response) => response,
       (error) => {
@@ -36,7 +41,6 @@ function AuthProvider({ children }) {
     );
 
     return () => {
-      axios.interceptors.request.eject(requestInterceptor);
       axios.interceptors.response.eject(responseInterceptor);
     };
   }, []);

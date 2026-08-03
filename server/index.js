@@ -3,6 +3,9 @@ import cors from 'cors';
 import 'dotenv/config';
 import childrenRoutes from './routes/children.routes.js';
 import eventsRoutes from './routes/events.routes.js';
+import homeworkRoutes from './routes/homework.routes.js';
+import feesRoutes from './routes/fees.routes.js';
+import dailyScheduleRoutes from './routes/dailySchedule.routes.js';
 import authRoutes from './routes/auth.routes.js';
 import requireAuth from './middleware/requireAuth.js';
 import attachFamily from './middleware/attachFamily.js';
@@ -21,6 +24,9 @@ app.use('/api/auth', authRoutes);
 
 app.use('/api/children', requireAuth, attachFamily, childrenRoutes);
 app.use('/api/events', requireAuth, attachFamily, eventsRoutes);
+app.use('/api/homework', requireAuth, attachFamily, homeworkRoutes);
+app.use('/api/fees', requireAuth, attachFamily, feesRoutes);
+app.use('/api/daily-schedule', requireAuth, attachFamily, dailyScheduleRoutes);
 
 app.use((req, res) => {
   res.status(404).json({ error: 'Route not found' });
