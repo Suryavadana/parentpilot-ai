@@ -17,12 +17,13 @@ model Family {
   name      String
   users     User[]
   children  Child[]
+  events    Event[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
 model Child {
-  id                String   @id @default(cuid())
+  id                String          @id @default(cuid())
   fullName          String
   dateOfBirth       DateTime
   gender            String?
@@ -33,10 +34,13 @@ model Child {
   medicalConditions String?
   profilePhotoUrl   String?
   familyId          String
-  family            Family   @relation(fields: [familyId], references: [id])
+  family            Family          @relation(fields: [familyId], references: [id])
   events            Event[]
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
+  homework          Homework[]
+  fees              Fee[]
+  dailySchedule     DailySchedule[]
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
 }
 
 model Event {
@@ -50,8 +54,49 @@ model Event {
   allDay      Boolean   @default(false)
   childId     String?
   child       Child?    @relation(fields: [childId], references: [id])
+  familyId    String
+  family      Family    @relation(fields: [familyId], references: [id])
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
+}
+
+model Homework {
+  id        String   @id @default(cuid())
+  title     String
+  subject   String
+  dueDate   DateTime
+  status    String   @default("not_started")
+  notes     String?
+  childId   String
+  child     Child    @relation(fields: [childId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Fee {
+  id          String   @id @default(cuid())
+  description String
+  amount      Decimal
+  dueDate     DateTime
+  status      String   @default("unpaid")
+  childId     String
+  child       Child    @relation(fields: [childId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model DailySchedule {
+  id        String   @id @default(cuid())
+  dayOfWeek Int
+  startTime String
+  endTime   String
+  subject   String
+  location  String?
+  notes     String?
+  childId   String
+  child     Child    @relation(fields: [childId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model User {
