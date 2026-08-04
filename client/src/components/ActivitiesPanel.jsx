@@ -1,45 +1,30 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
 import { useChild } from '../context/ChildContext';
+import NoChildrenPrompt from './NoChildrenPrompt';
+import ActivityForm from './ActivityForm';
 import '../App.css';
 
-const emptyForm = {
-  title: '',
-  startDate: '',
-  location: '',
-  childId: '',
-};
+const DAY_LABELS = [
+  'Sundays', 'Mondays', 'Tuesdays', 'Wednesdays', 'Thursdays', 'Fridays', 'Saturdays',
+];
 
-const formatEventDate = (event) => {
-  const startDate = new Date(event.startDate);
+const formatSchedule = (activity) => {
+  const hasDay = activity.dayOfWeek !== null && activity.dayOfWeek !== undefined;
+  const hasTime = Boolean(activity.startTime && activity.endTime);
+  const dayLabel = hasDay ? DAY_LABELS[activity.dayOfWeek] : '';
+  const timeLabel = hasTime ? `${activity.startTime}-${activity.endTime}` : '';
 
-  if (event.allDay) {
-    return startDate.toLocaleDateString(undefined, {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-    });
-  }
-
-  return startDate.toLocaleString(undefined, {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-    hour: 'numeric',
-    minute: '2-digit',
-  });
+  return [dayLabel, timeLabel].filter(Boolean).join(' ');
 };
 
 function ActivitiesPanel() {
-  const { children, selectedChildId } = useChild();
+  const { hasChildren, loading: childrenLoading, selectedChildId } = useChild();
   const [activities, setActivities] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [showAddForm, setShowAddForm] = useState(false);
-  const [formData, setFormData] = useState({ ...emptyForm, childId: selectedChildId || '' });
-  const [formError, setFormError] = useState('');
-  const [submitting, setSubmitting] = useState(false);
+  const [showForm, setShowForm] = useState(false);
+  const [editingActivityId, setEditingActivityId] = useState(null);
 
   const fetchActivities = async () => {
     if (!selectedChildId) {
@@ -51,10 +36,10 @@ function ActivitiesPanel() {
     setLoading(true);
 
     try {
-      const response = await axios.get('/api/events', {
+      const response = await axios.get('/api/activities', {
         params: { childId: selectedChildId },
       });
-      setActivities(response.data.filter((event) => event.category === 'activity'));
+      setActivities(response.data);
       setError('');
     } catch (err) {
       setError('Unable to load activities right now.');
@@ -68,59 +53,43 @@ function ActivitiesPanel() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedChildId]);
 
-  const handleChange = (event) => {
-    const { name, value } = event.target;
-    setFormData((current) => ({ ...current, [name]: value }));
-  };
-
   const openAddForm = () => {
-    setFormData({ ...emptyForm, childId: selectedChildId || '' });
-    setFormError('');
-    setShowAddForm(true);
+    setEditingActivityId(null);
+    setShowForm(true);
   };
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    setFormError('');
-
-    if (!formData.title.trim() || !formData.startDate) {
-      setFormError('Title and date are required.');
-      return;
-    }
-
-    setSubmitting(true);
-
-    try {
-      await axios.post('/api/events', {
-        title: formData.title.trim(),
-        category: 'activity',
-        startDate: formData.startDate,
-        location: formData.location.trim(),
-        childId: formData.childId || null,
-      });
-      setFormData({ ...emptyForm, childId: selectedChildId || '' });
-      setShowAddForm(false);
-      fetchActivities();
-    } catch (err) {
-      setFormError(err.response?.data?.error || 'Unable to save this activity.');
-    } finally {
-      setSubmitting(false);
-    }
+  const openEditForm = (id) => {
+    setEditingActivityId(id);
+    setShowForm(true);
   };
 
-  const handleDelete = async (id, title) => {
-    const confirmed = window.confirm(`Delete "${title}"? This can't be undone.`);
+  const closeForm = () => {
+    setShowForm(false);
+    setEditingActivityId(null);
+  };
+
+  const handleSaved = () => {
+    closeForm();
+    fetchActivities();
+  };
+
+  const handleDelete = async (id, name) => {
+    const confirmed = window.confirm(`Delete "${name}"? This can't be undone.`);
     if (!confirmed) return;
 
     try {
-      await axios.delete(`/api/events/${id}`);
-      setActivities((current) => current.filter((event) => event.id !== id));
+      await axios.delete(`/api/activities/${id}`);
+      setActivities((current) => current.filter((item) => item.id !== id));
     } catch (err) {
       alert('Unable to delete this activity right now.');
     }
   };
 
-  if (loading) {
+  if (!childrenLoading && !hasChildren) {
+    return <NoChildrenPrompt />;
+  }
+
+  if (loading || childrenLoading) {
     return <div className="list-state">Loading activities...</div>;
   }
 
@@ -138,75 +107,47 @@ function ActivitiesPanel() {
           <button
             type="button"
             className="toggle-form-button"
-            onClick={() => (showAddForm ? setShowAddForm(false) : openAddForm())}
+            onClick={showForm ? closeForm : openAddForm}
           >
-            {showAddForm ? 'Cancel' : 'Add activity'}
+            {showForm ? 'Cancel' : 'Add activity'}
           </button>
         )}
       </div>
 
-      {(showAddForm || !hasActivities) && (
-        <section className="child-form-card">
-          <h2>Add activity</h2>
-
-          {formError ? <p className="form-message error">{formError}</p> : null}
-
-          <form className="child-form" onSubmit={handleSubmit}>
-            <label>
-              Title
-              <input name="title" value={formData.title} onChange={handleChange} required />
-            </label>
-
-            <label>
-              Date
-              <input
-                name="startDate"
-                type="datetime-local"
-                value={formData.startDate}
-                onChange={handleChange}
-                required
-              />
-            </label>
-
-            <label>
-              Location
-              <input name="location" value={formData.location} onChange={handleChange} />
-            </label>
-
-            <label>
-              Child
-              <select name="childId" value={formData.childId} onChange={handleChange}>
-                <option value="">Unassigned</option>
-                {children.map((child) => (
-                  <option key={child.id} value={child.id}>
-                    {child.fullName}
-                  </option>
-                ))}
-              </select>
-            </label>
-
-            <button type="submit" disabled={submitting}>
-              {submitting ? 'Saving...' : 'Create activity'}
-            </button>
-          </form>
-        </section>
+      {(showForm || !hasActivities) && (
+        <ActivityForm activityId={editingActivityId} onSaved={handleSaved} />
       )}
 
       {hasActivities ? (
         <div className="panel-list">
-          {activities.map((event) => (
-            <article key={event.id} className="event-card">
-              <h3>{event.title}</h3>
-              <span className="category-badge">Activity</span>
-              <p>{formatEventDate(event)}</p>
-              {event.location && <p><strong>Location:</strong> {event.location}</p>}
-              <span className="child-tag">{event.child?.fullName || 'Unassigned'}</span>
+          {activities.map((activity) => (
+            <article key={activity.id} className="event-card">
+              <h3>{activity.name}</h3>
+              {activity.activityType && (
+                <span className="category-badge">{activity.activityType}</span>
+              )}
+              {(activity.coachName || activity.venue || activity.contactInfo) && (
+                <p>
+                  {[activity.coachName, activity.venue, activity.contactInfo]
+                    .filter(Boolean)
+                    .join(' · ')}
+                </p>
+              )}
+              {formatSchedule(activity) && <p>{formatSchedule(activity)}</p>}
+              {activity.notes && <p>{activity.notes}</p>}
+              <span className="child-tag">{activity.child?.fullName}</span>
               <div className="card-actions">
-                <Link to={`/edit-event/${event.id}`}>Edit</Link>
+                <button
+                  type="button"
+                  className="link-button"
+                  onClick={() => openEditForm(activity.id)}
+                >
+                  Edit
+                </button>
                 <button
                   type="button"
                   className="delete-button"
-                  onClick={() => handleDelete(event.id, event.title)}
+                  onClick={() => handleDelete(activity.id, activity.name)}
                 >
                   Delete
                 </button>
