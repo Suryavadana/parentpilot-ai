@@ -8,7 +8,7 @@ function Header() {
   return (
     <header className="app-header">
       <span className="app-header-icon" aria-hidden="true">🚀</span>
-      <span className="app-header-title">ParentPilot</span>
+      <span className="app-header-title">ParentPilotAI</span>
       {!token && (
         <nav className="app-header-nav">
           <Link to="/login">Log in</Link>

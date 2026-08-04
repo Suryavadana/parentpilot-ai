@@ -10,6 +10,7 @@
   --color-blue: #3dc1f2;
   --color-coral: #ff6f5e;
   --color-green: #6fcf7b;
+  --color-lavender: #b18cf2;
   --color-cream: #fffaf0;
   --color-white: #ffffff;
 
@@ -251,6 +252,10 @@ h4 {
 
 .app-content {
   flex: 1;
+  /* Flex items default to min-width: auto, which lets wide children (like
+     the 7-column schedule grid) force this column past the sidebar instead
+     of shrinking or scrolling internally. */
+  min-width: 0;
   max-width: 960px;
   margin: 0 auto;
   padding: 32px 24px;
@@ -847,15 +852,21 @@ h4 {
 
 .schedule-grid {
   display: grid;
-  grid-template-columns: repeat(7, 1fr);
+  /* Columns shrink fluidly down to 120px; below that the grid scrolls
+     within its own box instead of overflowing the page. */
+  grid-template-columns: repeat(7, minmax(120px, 1fr));
   gap: 12px;
   align-items: start;
+  width: 100%;
+  overflow-x: auto;
+  padding-bottom: 6px;
 }
 
 .schedule-day {
   display: flex;
   flex-direction: column;
   gap: 10px;
+  min-width: 0;
   background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
@@ -894,6 +905,7 @@ h4 {
   font-weight: 700;
   font-size: 0.95rem;
   color: var(--color-text);
+  overflow-wrap: break-word;
 }
 
 .schedule-period-time {
@@ -923,6 +935,199 @@ h4 {
 .schedule-period-actions .link-button,
 .schedule-period-actions .delete-button {
   font-size: 0.78rem;
+}
+
+/* ==========================================================================
+   Monthly calendar
+   ========================================================================== */
+.monthly-calendar {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.calendar-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.calendar-nav-title {
+  margin: 0;
+  font-size: 1.4rem;
+  text-align: center;
+}
+
+.calendar-nav-button {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-pill);
+  padding: 8px 18px;
+  font: inherit;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  color: var(--color-primary-dark);
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition-bounce);
+}
+
+.calendar-nav-button:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lift);
+}
+
+.calendar-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+
+.calendar-legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+}
+
+.calendar-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.calendar-dot.school {
+  background: var(--color-blue);
+}
+
+.calendar-dot.homework {
+  background: var(--color-coral);
+}
+
+.calendar-dot.fees {
+  background: var(--color-yellow);
+}
+
+.calendar-dot.events {
+  background: var(--color-green);
+}
+
+.calendar-dot.appointments {
+  background: var(--color-lavender);
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 6px;
+  width: 100%;
+}
+
+.calendar-weekday {
+  padding-bottom: 6px;
+  text-align: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-text-muted);
+}
+
+.calendar-day-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+  min-height: 56px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 8px 4px;
+  font: inherit;
+  color: var(--color-text);
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+
+.calendar-day-cell:hover {
+  border-color: var(--color-primary);
+}
+
+.calendar-day-cell.outside-month {
+  color: var(--color-text-muted);
+  background: var(--color-bg);
+}
+
+.calendar-day-cell.today .calendar-day-number {
+  background: var(--color-upcoming-bg);
+  color: var(--color-primary-dark);
+}
+
+.calendar-day-cell.selected {
+  border-color: var(--color-primary);
+  box-shadow: var(--shadow-sm);
+  background: var(--color-upcoming-bg);
+}
+
+.calendar-day-number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+
+.calendar-day-dots {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 3px;
+  min-height: 8px;
+}
+
+.calendar-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  box-shadow: var(--shadow-sm);
+}
+
+.calendar-detail > h3 {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.summary-item.category-school {
+  border-left-color: var(--color-blue);
+}
+
+.summary-item.category-homework {
+  border-left-color: var(--color-coral);
+}
+
+.summary-item.category-fees {
+  border-left-color: var(--color-yellow);
+}
+
+.summary-item.category-events {
+  border-left-color: var(--color-green);
+}
+
+.summary-item.category-appointments {
+  border-left-color: var(--color-lavender);
 }
 
 /* ==========================================================================
@@ -1271,6 +1476,35 @@ h4 {
 
   .schedule-grid {
     grid-template-columns: 1fr;
+  }
+
+  .calendar-grid {
+    gap: 3px;
+  }
+
+  .calendar-day-cell {
+    min-height: 40px;
+    padding: 4px 2px;
+    gap: 2px;
+  }
+
+  .calendar-day-number {
+    width: 20px;
+    height: 20px;
+    font-size: 0.75rem;
+  }
+
+  .calendar-weekday {
+    font-size: 0.65rem;
+  }
+
+  .calendar-nav-title {
+    font-size: 1.1rem;
+  }
+
+  .calendar-nav-button {
+    padding: 6px 12px;
+    font-size: 0.85rem;
   }
 
   .profile-sections {

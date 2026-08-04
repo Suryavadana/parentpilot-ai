@@ -7,6 +7,12 @@ import homeworkRoutes from './routes/homework.routes.js';
 import feesRoutes from './routes/fees.routes.js';
 import dailyScheduleRoutes from './routes/dailySchedule.routes.js';
 import activityRoutes from './routes/activity.routes.js';
+import medicationRoutes from './routes/medication.routes.js';
+import doctorRoutes from './routes/doctor.routes.js';
+import appointmentRoutes from './routes/appointment.routes.js';
+import vaccinationRoutes from './routes/vaccination.routes.js';
+import growthRecordRoutes from './routes/growthRecord.routes.js';
+import feedbackRoutes from './routes/feedback.routes.js';
 import authRoutes from './routes/auth.routes.js';
 import requireAuth from './middleware/requireAuth.js';
 import attachFamily from './middleware/attachFamily.js';
@@ -29,6 +35,12 @@ app.use('/api/homework', requireAuth, attachFamily, homeworkRoutes);
 app.use('/api/fees', requireAuth, attachFamily, feesRoutes);
 app.use('/api/daily-schedule', requireAuth, attachFamily, dailyScheduleRoutes);
 app.use('/api/activities', requireAuth, attachFamily, activityRoutes);
+app.use('/api/medications', requireAuth, attachFamily, medicationRoutes);
+app.use('/api/doctors', requireAuth, attachFamily, doctorRoutes);
+app.use('/api/appointments', requireAuth, attachFamily, appointmentRoutes);
+app.use('/api/vaccinations', requireAuth, attachFamily, vaccinationRoutes);
+app.use('/api/growth-records', requireAuth, attachFamily, growthRecordRoutes);
+app.use('/api/feedback', requireAuth, attachFamily, feedbackRoutes);
 
 app.use((req, res) => {
   res.status(404).json({ error: 'Route not found' });

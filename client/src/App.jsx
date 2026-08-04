@@ -8,9 +8,15 @@ import HomeworkList from './components/HomeworkList';
 import HomeworkForm from './components/HomeworkForm';
 import FeesList from './components/FeesList';
 import FeeForm from './components/FeeForm';
-import DailyScheduleGrid from './components/DailyScheduleGrid';
+import MonthlyCalendar from './components/MonthlyCalendar';
 import AnnouncementsPanel from './components/AnnouncementsPanel';
 import ActivitiesPanel from './components/ActivitiesPanel';
+import MedicationsPanel from './components/MedicationsPanel';
+import DoctorsPanel from './components/DoctorsPanel';
+import AppointmentsPanel from './components/AppointmentsPanel';
+import VaccinationsPanel from './components/VaccinationsPanel';
+import GrowthRecordsPanel from './components/GrowthRecordsPanel';
+import FeedbackPanel from './components/FeedbackPanel';
 import ChildProfile from './components/ChildProfile';
 import Header from './components/Header';
 import AppLayout from './components/AppLayout';
@@ -199,7 +205,7 @@ function AppShell() {
           element={(
             <ProtectedRoute>
               <AppLayout>
-                <DailyScheduleGrid />
+                <MonthlyCalendar />
               </AppLayout>
             </ProtectedRoute>
           )}
@@ -220,6 +226,66 @@ function AppShell() {
             <ProtectedRoute>
               <AppLayout>
                 <ActivitiesPanel />
+              </AppLayout>
+            </ProtectedRoute>
+          )}
+        />
+        <Route
+          path="/medications"
+          element={(
+            <ProtectedRoute>
+              <AppLayout>
+                <MedicationsPanel />
+              </AppLayout>
+            </ProtectedRoute>
+          )}
+        />
+        <Route
+          path="/doctors"
+          element={(
+            <ProtectedRoute>
+              <AppLayout>
+                <DoctorsPanel />
+              </AppLayout>
+            </ProtectedRoute>
+          )}
+        />
+        <Route
+          path="/appointments"
+          element={(
+            <ProtectedRoute>
+              <AppLayout>
+                <AppointmentsPanel />
+              </AppLayout>
+            </ProtectedRoute>
+          )}
+        />
+        <Route
+          path="/vaccinations"
+          element={(
+            <ProtectedRoute>
+              <AppLayout>
+                <VaccinationsPanel />
+              </AppLayout>
+            </ProtectedRoute>
+          )}
+        />
+        <Route
+          path="/growth-records"
+          element={(
+            <ProtectedRoute>
+              <AppLayout>
+                <GrowthRecordsPanel />
+              </AppLayout>
+            </ProtectedRoute>
+          )}
+        />
+        <Route
+          path="/feedback"
+          element={(
+            <ProtectedRoute>
+              <AppLayout>
+                <FeedbackPanel />
               </AppLayout>
             </ProtectedRoute>
           )}
