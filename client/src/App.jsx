@@ -1,6 +1,7 @@
 import { BrowserRouter, Route, Routes, useParams } from 'react-router-dom';
 import './App.css';
 import ChildrenList from './components/ChildrenList';
+import RemindersDashboard from './components/RemindersDashboard';
 import ChildForm from './components/ChildForm';
 import EventsList from './components/EventsList';
 import EventForm from './components/EventForm';
@@ -286,6 +287,16 @@ function AppShell() {
             <ProtectedRoute>
               <AppLayout>
                 <FeedbackPanel />
+              </AppLayout>
+            </ProtectedRoute>
+          )}
+        />
+        <Route
+          path="/today"
+          element={(
+            <ProtectedRoute>
+              <AppLayout>
+                <RemindersDashboard />
               </AppLayout>
             </ProtectedRoute>
           )}
