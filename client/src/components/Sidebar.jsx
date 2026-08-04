@@ -16,6 +16,13 @@ function Sidebar() {
   return (
     <aside className="sidebar">
       <div className="sidebar-section">
+        <h3 className="sidebar-heading">Today</h3>
+        <nav className="sidebar-links">
+          <Link to="/today">Today</Link>
+        </nav>
+      </div>
+
+      <div className="sidebar-section">
         <h3 className="sidebar-heading">Children</h3>
         <nav className="sidebar-links">
           <Link to="/">Children</Link>

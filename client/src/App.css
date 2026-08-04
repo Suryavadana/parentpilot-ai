@@ -1131,6 +1131,53 @@ h4 {
 }
 
 /* ==========================================================================
+   Reminders dashboard
+   ========================================================================== */
+.reminders-dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.reminders-dashboard h2 {
+  margin: 0;
+  font-size: 1.6rem;
+}
+
+.reminders-section h3 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.reminder-item {
+  text-decoration: none;
+  color: inherit;
+  transition: var(--transition-fast);
+}
+
+.reminder-item:hover {
+  background: var(--color-border);
+}
+
+.reminder-item-main {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.reminder-type-badge {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-text-muted);
+}
+
+.summary-item.today {
+  border-left-color: var(--color-highlight);
+}
+
+/* ==========================================================================
    Auth (login / signup)
    ========================================================================== */
 .auth-page {
