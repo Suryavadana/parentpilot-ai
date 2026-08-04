@@ -6,6 +6,7 @@ import eventsRoutes from './routes/events.routes.js';
 import homeworkRoutes from './routes/homework.routes.js';
 import feesRoutes from './routes/fees.routes.js';
 import dailyScheduleRoutes from './routes/dailySchedule.routes.js';
+import activityRoutes from './routes/activity.routes.js';
 import authRoutes from './routes/auth.routes.js';
 import requireAuth from './middleware/requireAuth.js';
 import attachFamily from './middleware/attachFamily.js';
@@ -27,6 +28,7 @@ app.use('/api/events', requireAuth, attachFamily, eventsRoutes);
 app.use('/api/homework', requireAuth, attachFamily, homeworkRoutes);
 app.use('/api/fees', requireAuth, attachFamily, feesRoutes);
 app.use('/api/daily-schedule', requireAuth, attachFamily, dailyScheduleRoutes);
+app.use('/api/activities', requireAuth, attachFamily, activityRoutes);
 
 app.use((req, res) => {
   res.status(404).json({ error: 'Route not found' });
