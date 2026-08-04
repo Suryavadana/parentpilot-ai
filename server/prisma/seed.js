@@ -13,6 +13,107 @@ const daysFromNow = (offset) => {
   return date;
 };
 
+const seedChildHealthRecords = async (prisma, family, config) => {
+  const child = await prisma.child.upsert({
+    where: { id: config.childId },
+    update: {},
+    create: {
+      id: config.childId,
+      fullName: config.fullName,
+      dateOfBirth: config.dateOfBirth,
+      familyId: family.id,
+    },
+  });
+
+  const doctor = await prisma.doctor.upsert({
+    where: { id: config.doctor.id },
+    update: {
+      name: config.doctor.name,
+      specialty: config.doctor.specialty,
+      phone: config.doctor.phone,
+      email: config.doctor.email,
+      address: config.doctor.address,
+    },
+    create: {
+      ...config.doctor,
+      childId: child.id,
+      familyId: family.id,
+    },
+  });
+
+  await Promise.all(config.medications.map((item) => prisma.medication.upsert({
+    where: { id: item.id },
+    update: {
+      name: item.name,
+      dosage: item.dosage,
+      frequency: item.frequency,
+      startDate: item.startDate,
+      endDate: item.endDate,
+      notes: item.notes,
+    },
+    create: { ...item, childId: child.id },
+  })));
+
+  await Promise.all(config.appointments.map((item) => prisma.appointment.upsert({
+    where: { id: item.id },
+    update: {
+      reason: item.reason,
+      scheduledAt: item.scheduledAt,
+      status: item.status,
+      notes: item.notes,
+      doctorId: doctor.id,
+    },
+    create: { ...item, childId: child.id, doctorId: doctor.id },
+  })));
+
+  await Promise.all(config.vaccinations.map((item) => prisma.vaccination.upsert({
+    where: { id: item.id },
+    update: {
+      vaccineName: item.vaccineName,
+      doseNumber: item.doseNumber,
+      dateAdministered: item.dateAdministered,
+      nextDueDate: item.nextDueDate,
+      administeredBy: item.administeredBy,
+      notes: item.notes,
+    },
+    create: { ...item, childId: child.id },
+  })));
+
+  await Promise.all(config.growthRecords.map((item) => prisma.growthRecord.upsert({
+    where: { id: item.id },
+    update: {
+      date: item.date,
+      heightCm: item.heightCm,
+      weightKg: item.weightKg,
+      notes: item.notes,
+    },
+    create: { ...item, childId: child.id },
+  })));
+
+  await Promise.all(config.feedback.map((item) => prisma.feedback.upsert({
+    where: { id: item.id },
+    update: {
+      source: item.source,
+      category: item.category,
+      content: item.content,
+      date: item.date,
+    },
+    create: { ...item, childId: child.id },
+  })));
+
+  return {
+    child,
+    doctor,
+    counts: {
+      medications: config.medications.length,
+      appointments: config.appointments.length,
+      vaccinations: config.vaccinations.length,
+      growthRecords: config.growthRecords.length,
+      feedback: config.feedback.length,
+    },
+  };
+};
+
 const main = async () => {
   const prisma = getPrismaClient();
 
@@ -239,6 +340,225 @@ const main = async () => {
     },
   })));
 
+  const familyWideDoctor = await prisma.doctor.upsert({
+    where: { id: 'seed-doctor-family-wide' },
+    update: {},
+    create: {
+      id: 'seed-doctor-family-wide',
+      name: 'Dr. Raj Patel',
+      specialty: 'General Physician',
+      phone: '555-0199',
+      email: 'dr.patel@example.com',
+      address: '456 Health Blvd',
+      childId: null,
+      familyId: family.id,
+    },
+  });
+
+  const child2Result = await seedChildHealthRecords(prisma, family, {
+    childId: 'seed-child-2',
+    fullName: 'Test Child 2',
+    dateOfBirth: new Date('2015-06-15'),
+    doctor: {
+      id: 'seed-doctor-child2',
+      name: 'Dr. Emily Chen',
+      specialty: 'Pediatrician',
+      phone: '555-0182',
+      email: 'dr.chen@example.com',
+      address: '123 Clinic Way',
+    },
+    medications: [
+      {
+        id: 'seed-medication-child2-1',
+        name: 'Amoxicillin',
+        dosage: '250mg',
+        frequency: 'Twice daily',
+        startDate: daysFromNow(-10),
+        endDate: daysFromNow(4),
+        notes: 'For ear infection',
+      },
+      {
+        id: 'seed-medication-child2-2',
+        name: 'Vitamin D',
+        dosage: '400 IU',
+        frequency: 'Once daily',
+        startDate: daysFromNow(-30),
+        endDate: null,
+        notes: 'Daily supplement',
+      },
+    ],
+    appointments: [
+      {
+        id: 'seed-appointment-child2-1',
+        reason: 'Annual checkup',
+        scheduledAt: daysFromNow(5),
+        status: 'upcoming',
+        notes: 'Bring vaccination record',
+      },
+      {
+        id: 'seed-appointment-child2-2',
+        reason: 'Ear infection follow-up',
+        scheduledAt: daysFromNow(-14),
+        status: 'completed',
+        notes: 'Infection cleared, no further action needed',
+      },
+    ],
+    vaccinations: [
+      {
+        id: 'seed-vaccination-child2-1',
+        vaccineName: 'Influenza',
+        doseNumber: 1,
+        dateAdministered: daysFromNow(-30),
+        nextDueDate: daysFromNow(180),
+        administeredBy: 'Dr. Emily Chen',
+        notes: 'Seasonal flu shot',
+      },
+      {
+        id: 'seed-vaccination-child2-2',
+        vaccineName: 'MMR',
+        doseNumber: 2,
+        dateAdministered: daysFromNow(-365),
+        nextDueDate: null,
+        administeredBy: 'Dr. Emily Chen',
+        notes: 'Final dose in series',
+      },
+    ],
+    growthRecords: [
+      {
+        id: 'seed-growth-record-child2-1',
+        date: daysFromNow(-60),
+        heightCm: 110.5,
+        weightKg: 19.2,
+        notes: 'Routine checkup measurement',
+      },
+      {
+        id: 'seed-growth-record-child2-2',
+        date: daysFromNow(-5),
+        heightCm: 111.2,
+        weightKg: 19.8,
+        notes: 'Growth spurt noticed',
+      },
+    ],
+    feedback: [
+      {
+        id: 'seed-feedback-child2-1',
+        source: 'Teacher - Ms. Rodriguez',
+        category: 'academic',
+        content: 'Test Child 2 has shown great improvement in reading comprehension this month.',
+        date: daysFromNow(-3),
+      },
+      {
+        id: 'seed-feedback-child2-2',
+        source: 'School Nurse',
+        category: 'health',
+        content: 'Recommended an eye exam due to squinting at the board during class.',
+        date: daysFromNow(-10),
+      },
+    ],
+  });
+
+  const child3Result = await seedChildHealthRecords(prisma, family, {
+    childId: 'seed-child-3',
+    fullName: 'Test Child 3',
+    dateOfBirth: new Date('2012-09-20'),
+    doctor: {
+      id: 'seed-doctor-child3',
+      name: 'Dr. Marcus Lee',
+      specialty: 'Dentist',
+      phone: '555-0173',
+      email: 'dr.lee@example.com',
+      address: '789 Smile St',
+    },
+    medications: [
+      {
+        id: 'seed-medication-child3-1',
+        name: 'Albuterol Inhaler',
+        dosage: '90mcg',
+        frequency: 'As needed for asthma',
+        startDate: daysFromNow(-180),
+        endDate: null,
+        notes: 'Keep at school and at home',
+      },
+      {
+        id: 'seed-medication-child3-2',
+        name: 'Cetirizine',
+        dosage: '10mg',
+        frequency: 'Once daily during allergy season',
+        startDate: daysFromNow(-20),
+        endDate: daysFromNow(10),
+        notes: 'For seasonal allergies',
+      },
+    ],
+    appointments: [
+      {
+        id: 'seed-appointment-child3-1',
+        reason: 'Dental cleaning',
+        scheduledAt: daysFromNow(1),
+        status: 'upcoming',
+        notes: 'Routine six-month cleaning',
+      },
+      {
+        id: 'seed-appointment-child3-2',
+        reason: 'Asthma check-in',
+        scheduledAt: daysFromNow(-45),
+        status: 'completed',
+        notes: 'Breathing well, no changes to inhaler needed',
+      },
+    ],
+    vaccinations: [
+      {
+        id: 'seed-vaccination-child3-1',
+        vaccineName: 'Tdap',
+        doseNumber: 1,
+        dateAdministered: daysFromNow(-400),
+        nextDueDate: daysFromNow(3200),
+        administeredBy: 'Dr. Marcus Lee',
+        notes: 'Booster before starting middle school',
+      },
+      {
+        id: 'seed-vaccination-child3-2',
+        vaccineName: 'COVID-19',
+        doseNumber: 2,
+        dateAdministered: daysFromNow(-90),
+        nextDueDate: daysFromNow(90),
+        administeredBy: 'Dr. Marcus Lee',
+        notes: null,
+      },
+    ],
+    growthRecords: [
+      {
+        id: 'seed-growth-record-child3-1',
+        date: daysFromNow(-90),
+        heightCm: 145.0,
+        weightKg: 38.5,
+        notes: 'Annual physical measurement',
+      },
+      {
+        id: 'seed-growth-record-child3-2',
+        date: daysFromNow(-10),
+        heightCm: 146.2,
+        weightKg: 39.4,
+        notes: null,
+      },
+    ],
+    feedback: [
+      {
+        id: 'seed-feedback-child3-1',
+        source: 'Coach - Mr. Diaz',
+        category: 'behavioral',
+        content: 'Demonstrates excellent teamwork and sportsmanship during practice.',
+        date: daysFromNow(-7),
+      },
+      {
+        id: 'seed-feedback-child3-2',
+        source: 'School Counselor',
+        category: 'general',
+        content: 'Settling in well after the recent move to a new class.',
+        date: daysFromNow(-15),
+      },
+    ],
+  });
+
   console.log('Seeded:', {
     family: family.name,
     user: user.email,
@@ -248,6 +568,13 @@ const main = async () => {
     announcementEvents: announcementEvents.length,
     activityEvents: activityEvents.length,
     dailySchedule: dailyScheduleItems.length,
+    familyWideDoctor: familyWideDoctor.name,
+    child2: child2Result.child.fullName,
+    child2Doctor: child2Result.doctor.name,
+    child2Counts: child2Result.counts,
+    child3: child3Result.child.fullName,
+    child3Doctor: child3Result.doctor.name,
+    child3Counts: child3Result.counts,
   });
 };
 

@@ -18,6 +18,7 @@ model Family {
   users     User[]
   children  Child[]
   events    Event[]
+  doctors   Doctor[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -40,6 +41,12 @@ model Child {
   fees              Fee[]
   dailySchedule     DailySchedule[]
   activities        Activity[]
+  medications       Medication[]
+  doctors           Doctor[]
+  appointments      Appointment[]
+  vaccinations      Vaccination[]
+  growthRecords     GrowthRecord[]
+  feedback          Feedback[]
   createdAt         DateTime        @default(now())
   updatedAt         DateTime        @updatedAt
 }
@@ -115,6 +122,89 @@ model Activity {
   child        Child    @relation(fields: [childId], references: [id])
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
+}
+
+model Medication {
+  id        String    @id @default(cuid())
+  name      String
+  dosage    String
+  frequency String
+  startDate DateTime
+  endDate   DateTime?
+  notes     String?
+  childId   String
+  child     Child     @relation(fields: [childId], references: [id])
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Doctor {
+  id           String        @id @default(cuid())
+  name         String
+  specialty    String?
+  phone        String?
+  email        String?
+  address      String?
+  notes        String?
+  childId      String?
+  child        Child?        @relation(fields: [childId], references: [id])
+  familyId     String
+  family       Family        @relation(fields: [familyId], references: [id])
+  appointments Appointment[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+}
+
+model Appointment {
+  id          String   @id @default(cuid())
+  reason      String
+  scheduledAt DateTime
+  status      String   @default("upcoming")
+  notes       String?
+  childId     String
+  child       Child    @relation(fields: [childId], references: [id])
+  doctorId    String?
+  doctor      Doctor?  @relation(fields: [doctorId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Vaccination {
+  id               String    @id @default(cuid())
+  vaccineName      String
+  doseNumber       Int?
+  dateAdministered DateTime
+  nextDueDate      DateTime?
+  administeredBy   String?
+  notes            String?
+  childId          String
+  child            Child     @relation(fields: [childId], references: [id])
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+}
+
+model GrowthRecord {
+  id        String   @id @default(cuid())
+  date      DateTime
+  heightCm  Float?
+  weightKg  Float?
+  notes     String?
+  childId   String
+  child     Child    @relation(fields: [childId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Feedback {
+  id        String   @id @default(cuid())
+  source    String
+  category  String
+  content   String
+  date      DateTime
+  childId   String
+  child     Child    @relation(fields: [childId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model User {
