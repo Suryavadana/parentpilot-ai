@@ -46,6 +46,13 @@ const formatTime = (value) => new Date(value).toLocaleTimeString(undefined, {
   minute: '2-digit',
 });
 
+// A 403 means this role (e.g. caregiver) simply can't see this resource —
+// treat it as "no data" rather than a page-level failure. Any other
+// rejection (500, network error, etc.) is a real failure.
+const isForbidden = (result) => result.status === 'rejected' && result.reason?.response?.status === 403;
+const isRealFailure = (result) => result.status === 'rejected' && !isForbidden(result);
+const dataOrEmpty = (result) => (result.status === 'fulfilled' ? result.value.data : []);
+
 function MonthlyCalendar() {
   const { hasChildren, loading: childrenLoading, selectedChildId } = useChild();
   const [viewDate, setViewDate] = useState(() => new Date());
@@ -75,7 +82,7 @@ function MonthlyCalendar() {
       setLoading(true);
 
       try {
-        const [scheduleRes, homeworkRes, feesRes, eventsRes, appointmentsRes] = await Promise.all([
+        const results = await Promise.allSettled([
           axios.get('/api/daily-schedule', { params: { childId: selectedChildId } }),
           axios.get('/api/homework', { params: { childId: selectedChildId } }),
           axios.get('/api/fees', { params: { childId: selectedChildId } }),
@@ -85,11 +92,18 @@ function MonthlyCalendar() {
 
         if (cancelled) return;
 
-        setSchedule(scheduleRes.data);
-        setHomework(homeworkRes.data);
-        setFees(feesRes.data);
-        setEvents(eventsRes.data);
-        setAppointments(appointmentsRes.data);
+        if (results.some(isRealFailure)) {
+          setError('Unable to load calendar data right now.');
+          return;
+        }
+
+        const [scheduleResult, homeworkResult, feesResult, eventsResult, appointmentsResult] = results;
+
+        setSchedule(dataOrEmpty(scheduleResult));
+        setHomework(dataOrEmpty(homeworkResult));
+        setFees(dataOrEmpty(feesResult));
+        setEvents(dataOrEmpty(eventsResult));
+        setAppointments(dataOrEmpty(appointmentsResult));
         setError('');
       } catch (err) {
         if (!cancelled) {

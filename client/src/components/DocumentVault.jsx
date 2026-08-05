@@ -63,7 +63,11 @@ function DocumentVault() {
       setDocuments(response.data);
       setError('');
     } catch (err) {
-      setError('Unable to load documents right now.');
+      if (err.response?.status === 403) {
+        setError("You don't have permission to view this.");
+      } else {
+        setError('Unable to load documents right now.');
+      }
     } finally {
       setLoading(false);
     }

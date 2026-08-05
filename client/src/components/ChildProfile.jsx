@@ -146,6 +146,12 @@ function ChildProfile() {
             </div>
           )}
           <Link to={`/edit/${child.id}`} className="link-button">Edit profile</Link>
+          {' · '}
+          <Link to={`/children/${child.id}/briefing`} className="link-button">Print briefing sheet</Link>
+          {' · '}
+          <Link to={`/children/${child.id}/vaccination-record`} className="link-button">
+            Print vaccination record
+          </Link>
         </div>
       </section>
 
