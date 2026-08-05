@@ -24,28 +24,32 @@ const isValidAmount = (amount) => {
   return Number.isFinite(parsedAmount) && parsedAmount > 0;
 };
 
+const fetchFeesForFamily = async ({ familyId, childId }) => {
+  const client = getPrismaClient();
+
+  const fees = await client.fee.findMany({
+    where: {
+      child: { familyId },
+      ...(childId ? { childId } : {}),
+    },
+    orderBy: { dueDate: 'asc' },
+    include: {
+      child: {
+        select: { fullName: true },
+      },
+    },
+  });
+
+  return fees.map((item) => ({
+    ...item,
+    urgency: calculateUrgency(item.dueDate, item.status, 'paid'),
+  }));
+};
+
 const getFees = async (req, res, next) => {
   try {
-    const client = getPrismaClient();
     const { childId } = req.query;
-
-    const fees = await client.fee.findMany({
-      where: {
-        child: { familyId: req.familyId },
-        ...(childId ? { childId } : {}),
-      },
-      orderBy: { dueDate: 'asc' },
-      include: {
-        child: {
-          select: { fullName: true },
-        },
-      },
-    });
-
-    const feesWithUrgency = fees.map((item) => ({
-      ...item,
-      urgency: calculateUrgency(item.dueDate, item.status, 'paid'),
-    }));
+    const feesWithUrgency = await fetchFeesForFamily({ familyId: req.familyId, childId });
 
     return res.status(200).json(feesWithUrgency);
   } catch (error) {
@@ -202,6 +206,7 @@ const deleteFee = async (req, res, next) => {
 };
 
 export {
+  fetchFeesForFamily,
   getFees,
   getFeeById,
   createFee,

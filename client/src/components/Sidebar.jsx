@@ -19,6 +19,7 @@ function Sidebar() {
         <h3 className="sidebar-heading">Today</h3>
         <nav className="sidebar-links">
           <Link to="/today">Today</Link>
+          <Link to="/assistant">Assistant</Link>
         </nav>
       </div>
 
@@ -54,6 +55,7 @@ function Sidebar() {
           <Link to="/homework">Homework</Link>
           <Link to="/fees">Fees</Link>
           <Link to="/announcements">Announcements</Link>
+          <Link to="/import-calendar">Import from photo</Link>
         </nav>
       </div>
 

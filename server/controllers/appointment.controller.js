@@ -31,31 +31,35 @@ const validateDoctorId = async (client, doctorId, familyId) => {
   return Boolean(doctor);
 };
 
+const fetchAppointmentsForFamily = async ({ familyId, childId }) => {
+  const client = getPrismaClient();
+
+  const appointments = await client.appointment.findMany({
+    where: {
+      child: { familyId },
+      ...(childId ? { childId } : {}),
+    },
+    orderBy: { scheduledAt: 'asc' },
+    include: {
+      child: {
+        select: { fullName: true },
+      },
+      doctor: {
+        select: { name: true },
+      },
+    },
+  });
+
+  return appointments.map((item) => ({
+    ...item,
+    urgency: calculateUrgency(item.scheduledAt, item.status, 'completed'),
+  }));
+};
+
 const getAppointments = async (req, res, next) => {
   try {
-    const client = getPrismaClient();
     const { childId } = req.query;
-
-    const appointments = await client.appointment.findMany({
-      where: {
-        child: { familyId: req.familyId },
-        ...(childId ? { childId } : {}),
-      },
-      orderBy: { scheduledAt: 'asc' },
-      include: {
-        child: {
-          select: { fullName: true },
-        },
-        doctor: {
-          select: { name: true },
-        },
-      },
-    });
-
-    const appointmentsWithUrgency = appointments.map((item) => ({
-      ...item,
-      urgency: calculateUrgency(item.scheduledAt, item.status, 'completed'),
-    }));
+    const appointmentsWithUrgency = await fetchAppointmentsForFamily({ familyId: req.familyId, childId });
 
     return res.status(200).json(appointmentsWithUrgency);
   } catch (error) {
@@ -212,6 +216,7 @@ const deleteAppointment = async (req, res, next) => {
 };
 
 export {
+  fetchAppointmentsForFamily,
   getAppointments,
   getAppointmentById,
   createAppointment,

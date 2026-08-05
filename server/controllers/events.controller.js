@@ -26,23 +26,28 @@ const normalizeEventData = (data) => {
   return eventData;
 };
 
+const fetchEventsForFamily = async ({ familyId, childId, category }) => {
+  const client = getPrismaClient();
+
+  return client.event.findMany({
+    where: {
+      familyId,
+      ...(childId ? { childId } : {}),
+      ...(category ? { category } : {}),
+    },
+    orderBy: { startDate: 'asc' },
+    include: {
+      child: {
+        select: { fullName: true },
+      },
+    },
+  });
+};
+
 const getEvents = async (req, res, next) => {
   try {
-    const client = getPrismaClient();
-    const { childId } = req.query;
-
-    const events = await client.event.findMany({
-      where: {
-        familyId: req.familyId,
-        ...(childId ? { childId } : {}),
-      },
-      orderBy: { startDate: 'asc' },
-      include: {
-        child: {
-          select: { fullName: true },
-        },
-      },
-    });
+    const { childId, category } = req.query;
+    const events = await fetchEventsForFamily({ familyId: req.familyId, childId, category });
 
     return res.status(200).json(events);
   } catch (error) {
@@ -184,6 +189,7 @@ const deleteEvent = async (req, res, next) => {
 };
 
 export {
+  fetchEventsForFamily,
   getEvents,
   getEventById,
   createEvent,

@@ -19,6 +19,8 @@ import VaccinationsPanel from './components/VaccinationsPanel';
 import GrowthRecordsPanel from './components/GrowthRecordsPanel';
 import FeedbackPanel from './components/FeedbackPanel';
 import DocumentVault from './components/DocumentVault';
+import CalendarImport from './components/CalendarImport';
+import AssistantChat from './components/AssistantChat';
 import ChildProfile from './components/ChildProfile';
 import Header from './components/Header';
 import AppLayout from './components/AppLayout';
@@ -308,6 +310,26 @@ function AppShell() {
             <ProtectedRoute>
               <AppLayout>
                 <DocumentVault />
+              </AppLayout>
+            </ProtectedRoute>
+          )}
+        />
+        <Route
+          path="/import-calendar"
+          element={(
+            <ProtectedRoute>
+              <AppLayout>
+                <CalendarImport />
+              </AppLayout>
+            </ProtectedRoute>
+          )}
+        />
+        <Route
+          path="/assistant"
+          element={(
+            <ProtectedRoute>
+              <AppLayout>
+                <AssistantChat />
               </AppLayout>
             </ProtectedRoute>
           )}

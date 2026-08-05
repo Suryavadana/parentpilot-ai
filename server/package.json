@@ -26,6 +26,8 @@
     "ext": "js"
   },
   "dependencies": {
+    "@google/genai": "^2.15.0",
+    "@google/generative-ai": "^0.24.1",
     "@prisma/adapter-pg": "^7.9.1",
     "@prisma/client": "^7.9.1",
     "bcrypt": "^6.0.0",

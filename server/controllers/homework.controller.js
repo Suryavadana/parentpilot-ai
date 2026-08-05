@@ -19,28 +19,32 @@ const normalizeHomeworkData = (data) => {
   return homeworkData;
 };
 
+const fetchHomeworkForFamily = async ({ familyId, childId }) => {
+  const client = getPrismaClient();
+
+  const homework = await client.homework.findMany({
+    where: {
+      child: { familyId },
+      ...(childId ? { childId } : {}),
+    },
+    orderBy: { dueDate: 'asc' },
+    include: {
+      child: {
+        select: { fullName: true },
+      },
+    },
+  });
+
+  return homework.map((item) => ({
+    ...item,
+    urgency: calculateUrgency(item.dueDate, item.status, 'done'),
+  }));
+};
+
 const getHomework = async (req, res, next) => {
   try {
-    const client = getPrismaClient();
     const { childId } = req.query;
-
-    const homework = await client.homework.findMany({
-      where: {
-        child: { familyId: req.familyId },
-        ...(childId ? { childId } : {}),
-      },
-      orderBy: { dueDate: 'asc' },
-      include: {
-        child: {
-          select: { fullName: true },
-        },
-      },
-    });
-
-    const homeworkWithUrgency = homework.map((item) => ({
-      ...item,
-      urgency: calculateUrgency(item.dueDate, item.status, 'done'),
-    }));
+    const homeworkWithUrgency = await fetchHomeworkForFamily({ familyId: req.familyId, childId });
 
     return res.status(200).json(homeworkWithUrgency);
   } catch (error) {
@@ -189,6 +193,7 @@ const deleteHomework = async (req, res, next) => {
 };
 
 export {
+  fetchHomeworkForFamily,
   getHomework,
   getHomeworkById,
   createHomework,
