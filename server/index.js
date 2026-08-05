@@ -19,6 +19,7 @@ import assistantRoutes from './routes/assistant.routes.js';
 import authRoutes from './routes/auth.routes.js';
 import requireAuth from './middleware/requireAuth.js';
 import attachFamily from './middleware/attachFamily.js';
+import requireRole from './middleware/requireRole.js';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -35,7 +36,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/children', requireAuth, attachFamily, childrenRoutes);
 app.use('/api/events', requireAuth, attachFamily, eventsRoutes);
 app.use('/api/homework', requireAuth, attachFamily, homeworkRoutes);
-app.use('/api/fees', requireAuth, attachFamily, feesRoutes);
+app.use('/api/fees', requireAuth, attachFamily, requireRole('owner', 'parent'), feesRoutes);
 app.use('/api/daily-schedule', requireAuth, attachFamily, dailyScheduleRoutes);
 app.use('/api/activities', requireAuth, attachFamily, activityRoutes);
 app.use('/api/medications', requireAuth, attachFamily, medicationRoutes);
@@ -44,7 +45,7 @@ app.use('/api/appointments', requireAuth, attachFamily, appointmentRoutes);
 app.use('/api/vaccinations', requireAuth, attachFamily, vaccinationRoutes);
 app.use('/api/growth-records', requireAuth, attachFamily, growthRecordRoutes);
 app.use('/api/feedback', requireAuth, attachFamily, feedbackRoutes);
-app.use('/api/documents', requireAuth, attachFamily, documentRoutes);
+app.use('/api/documents', requireAuth, attachFamily, requireRole('owner', 'parent'), documentRoutes);
 app.use('/api/ai', requireAuth, aiRoutes);
 app.use('/api/assistant', requireAuth, attachFamily, assistantRoutes);
 

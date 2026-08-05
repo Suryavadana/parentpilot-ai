@@ -117,6 +117,16 @@ h4 {
   letter-spacing: 0.02em;
 }
 
+.app-header-welcome {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  background: var(--color-bg);
+  padding: 5px 12px;
+  border-radius: var(--radius-pill);
+  white-space: nowrap;
+}
+
 .app-header-nav {
   margin-left: auto;
   display: flex;
@@ -1401,6 +1411,222 @@ h4 {
 .assistant-input-row button:disabled {
   opacity: 0.7;
   cursor: not-allowed;
+}
+
+/* ==========================================================================
+   Briefing sheet (printable)
+   ========================================================================== */
+.briefing-sheet {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 32px 20px;
+}
+
+.briefing-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.briefing-back-link {
+  color: var(--color-primary-dark);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.briefing-back-link:hover {
+  text-decoration: underline;
+}
+
+.briefing-print-button {
+  cursor: pointer;
+  background: var(--color-accent);
+  color: var(--color-white);
+  border: none;
+  border-radius: var(--radius-pill);
+  padding: 10px 24px;
+  font: inherit;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition-bounce);
+}
+
+.briefing-print-button:hover {
+  background: var(--color-accent-dark);
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: var(--shadow-md);
+}
+
+.briefing-page {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 32px;
+  box-shadow: var(--shadow-sm);
+}
+
+.briefing-header {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  border-bottom: 2px solid var(--color-border);
+  padding-bottom: 20px;
+}
+
+.briefing-avatar {
+  flex-shrink: 0;
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-upcoming-bg);
+  color: var(--color-primary-dark);
+  font-family: var(--font-heading);
+  font-size: 1.8rem;
+  font-weight: 800;
+}
+
+.briefing-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.briefing-header-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.briefing-header-info h1 {
+  margin: 0;
+  font-size: 1.7rem;
+}
+
+.briefing-meta {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-weight: 600;
+}
+
+.briefing-generated {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+}
+
+.briefing-emergency {
+  background: var(--color-overdue-bg);
+  border: 2px solid var(--color-overdue);
+  border-radius: var(--radius-lg);
+  padding: 18px 20px;
+  print-color-adjust: exact;
+  -webkit-print-color-adjust: exact;
+}
+
+.briefing-emergency h2 {
+  margin: 0 0 10px;
+  font-size: 1.1rem;
+  color: var(--color-overdue);
+}
+
+.briefing-emergency-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  color: var(--color-text);
+}
+
+.briefing-section h2 {
+  margin: 0 0 12px;
+  font-size: 1.1rem;
+}
+
+.briefing-empty {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+}
+
+.briefing-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.briefing-table th,
+.briefing-table td {
+  text-align: left;
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--color-border);
+  font-size: 0.9rem;
+}
+
+.briefing-table th {
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+}
+
+.briefing-family-tag {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 2px 10px;
+  border-radius: var(--radius-pill);
+  background: var(--color-upcoming-bg);
+  color: var(--color-primary-dark);
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.vaccination-record-label {
+  margin: 0 0 4px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-text-muted);
+}
+
+/* Shown only in the printed output (e.g. a "generated on" footer note) —
+   irrelevant clutter on screen, useful provenance on paper. */
+.briefing-print-only {
+  display: none;
+}
+
+@media print {
+  .app-header,
+  .briefing-toolbar {
+    display: none !important;
+  }
+
+  .briefing-sheet {
+    max-width: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .briefing-page {
+    border: none;
+    box-shadow: none;
+    padding: 0;
+  }
+
+  .briefing-print-only {
+    display: block;
+    margin-top: 20px;
+  }
 }
 
 /* ==========================================================================

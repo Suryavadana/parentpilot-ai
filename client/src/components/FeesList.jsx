@@ -54,7 +54,11 @@ function FeesList() {
         setFees(response.data);
         setError('');
       } catch (err) {
-        setError('Unable to load fees right now.');
+        if (err.response?.status === 403) {
+          setError("You don't have permission to view this.");
+        } else {
+          setError('Unable to load fees right now.');
+        }
       } finally {
         setLoading(false);
       }

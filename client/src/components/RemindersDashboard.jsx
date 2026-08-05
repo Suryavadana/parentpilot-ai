@@ -44,6 +44,13 @@ const isMedicationActiveToday = (medication, today) => {
 
 const urgencyClassName = (urgency) => (urgency === 'due_soon' ? 'due-soon' : urgency);
 
+// A 403 means this role (e.g. caregiver) simply can't see this resource —
+// treat it as "no data" rather than a page-level failure. Any other
+// rejection (500, network error, etc.) is a real failure.
+const isForbidden = (result) => result.status === 'rejected' && result.reason?.response?.status === 403;
+const isRealFailure = (result) => result.status === 'rejected' && !isForbidden(result);
+const dataOrEmpty = (result) => (result.status === 'fulfilled' ? result.value.data : []);
+
 function RemindersDashboard() {
   const { hasChildren, loading: childrenLoading, selectedChildId } = useChild();
   const [homework, setHomework] = useState([]);
@@ -71,7 +78,7 @@ function RemindersDashboard() {
       setLoading(true);
 
       try {
-        const [homeworkRes, feesRes, appointmentsRes, eventsRes, medicationsRes] = await Promise.all([
+        const results = await Promise.allSettled([
           axios.get('/api/homework', { params: { childId: selectedChildId } }),
           axios.get('/api/fees', { params: { childId: selectedChildId } }),
           axios.get('/api/appointments', { params: { childId: selectedChildId } }),
@@ -81,11 +88,18 @@ function RemindersDashboard() {
 
         if (cancelled) return;
 
-        setHomework(homeworkRes.data);
-        setFees(feesRes.data);
-        setAppointments(appointmentsRes.data);
-        setEvents(eventsRes.data);
-        setMedications(medicationsRes.data);
+        if (results.some(isRealFailure)) {
+          setError('Unable to load reminders right now.');
+          return;
+        }
+
+        const [homeworkResult, feesResult, appointmentsResult, eventsResult, medicationsResult] = results;
+
+        setHomework(dataOrEmpty(homeworkResult));
+        setFees(dataOrEmpty(feesResult));
+        setAppointments(dataOrEmpty(appointmentsResult));
+        setEvents(dataOrEmpty(eventsResult));
+        setMedications(dataOrEmpty(medicationsResult));
         setError('');
       } catch (err) {
         if (!cancelled) {

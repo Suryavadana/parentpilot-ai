@@ -22,6 +22,8 @@ import DocumentVault from './components/DocumentVault';
 import CalendarImport from './components/CalendarImport';
 import AssistantChat from './components/AssistantChat';
 import ChildProfile from './components/ChildProfile';
+import BriefingSheet from './components/BriefingSheet';
+import VaccinationRecord from './components/VaccinationRecord';
 import Header from './components/Header';
 import AppLayout from './components/AppLayout';
 import LoginForm from './components/LoginForm';
@@ -111,6 +113,22 @@ function AppShell() {
               <AppLayout>
                 <ChildProfile />
               </AppLayout>
+            </ProtectedRoute>
+          )}
+        />
+        <Route
+          path="/children/:id/briefing"
+          element={(
+            <ProtectedRoute>
+              <BriefingSheet />
+            </ProtectedRoute>
+          )}
+        />
+        <Route
+          path="/children/:id/vaccination-record"
+          element={(
+            <ProtectedRoute>
+              <VaccinationRecord />
             </ProtectedRoute>
           )}
         />
