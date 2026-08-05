@@ -26,23 +26,27 @@ const normalizeMedicationData = (data) => {
   return medicationData;
 };
 
+const fetchMedicationsForFamily = async ({ familyId, childId }) => {
+  const client = getPrismaClient();
+
+  return client.medication.findMany({
+    where: {
+      child: { familyId },
+      ...(childId ? { childId } : {}),
+    },
+    orderBy: { startDate: 'desc' },
+    include: {
+      child: {
+        select: { fullName: true },
+      },
+    },
+  });
+};
+
 const getMedications = async (req, res, next) => {
   try {
-    const client = getPrismaClient();
     const { childId } = req.query;
-
-    const medications = await client.medication.findMany({
-      where: {
-        child: { familyId: req.familyId },
-        ...(childId ? { childId } : {}),
-      },
-      orderBy: { startDate: 'desc' },
-      include: {
-        child: {
-          select: { fullName: true },
-        },
-      },
-    });
+    const medications = await fetchMedicationsForFamily({ familyId: req.familyId, childId });
 
     return res.status(200).json(medications);
   } catch (error) {
@@ -183,6 +187,7 @@ const deleteMedication = async (req, res, next) => {
 };
 
 export {
+  fetchMedicationsForFamily,
   getMedications,
   getMedicationById,
   createMedication,

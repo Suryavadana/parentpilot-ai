@@ -1194,6 +1194,216 @@ h4 {
 }
 
 /* ==========================================================================
+   Calendar import
+   ========================================================================== */
+.calendar-import-intro {
+  margin: 0 0 16px;
+  color: var(--color-text-muted);
+}
+
+.calendar-import-review {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.calendar-import-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.calendar-import-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-bg);
+}
+
+.calendar-import-row input[type='checkbox'] {
+  margin-top: 10px;
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  accent-color: var(--color-primary);
+}
+
+.calendar-import-row-fields {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  min-width: 0;
+}
+
+.calendar-import-row-fields input[type='text'],
+.calendar-import-row-fields input[type='date'] {
+  border-radius: var(--radius-sm);
+  border: 2px solid var(--color-border);
+  padding: 8px 12px;
+  font: inherit;
+  font-family: var(--font-body);
+  background: var(--color-surface);
+  color: var(--color-text);
+  transition: var(--transition-fast);
+}
+
+.calendar-import-row-fields input[type='text'] {
+  flex: 1;
+  min-width: 160px;
+}
+
+.calendar-import-row-fields input[type='text']:focus,
+.calendar-import-row-fields input[type='date']:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px var(--color-upcoming-bg);
+}
+
+.calendar-import-description {
+  flex-basis: 100%;
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+}
+
+/* ==========================================================================
+   Assistant chat
+   ========================================================================== */
+.assistant-chat {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 220px);
+  max-height: 720px;
+}
+
+.assistant-chat h2 {
+  margin: 0 0 12px;
+  font-size: 1.6rem;
+}
+
+.assistant-messages {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 20px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+.assistant-welcome {
+  margin: auto;
+  max-width: 360px;
+  text-align: center;
+  color: var(--color-text-muted);
+  font-weight: 600;
+}
+
+.assistant-message {
+  max-width: 75%;
+  padding: 10px 16px;
+  border-radius: var(--radius-lg);
+  white-space: pre-wrap;
+  line-height: 1.5;
+}
+
+.assistant-message.user {
+  align-self: flex-end;
+  background: var(--color-primary);
+  color: var(--color-white);
+  border-bottom-right-radius: var(--radius-sm);
+}
+
+.assistant-message.assistant {
+  align-self: flex-start;
+  background: var(--color-bg);
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+  border-bottom-left-radius: var(--radius-sm);
+}
+
+.assistant-message.error {
+  align-self: flex-start;
+  background: var(--color-error-bg);
+  color: var(--color-error);
+  border: 1px solid var(--color-error);
+}
+
+.assistant-message.thinking {
+  font-style: italic;
+  color: var(--color-text-muted);
+}
+
+.assistant-input-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.assistant-input-row textarea {
+  flex: 1;
+  resize: none;
+  max-height: 120px;
+  border-radius: var(--radius-md);
+  border: 2px solid var(--color-border);
+  padding: 10px 14px;
+  font: inherit;
+  font-family: var(--font-body);
+  background: var(--color-surface);
+  color: var(--color-text);
+  transition: var(--transition-fast);
+}
+
+.assistant-input-row textarea:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px var(--color-upcoming-bg);
+}
+
+.assistant-input-row button {
+  cursor: pointer;
+  background: var(--color-accent);
+  color: var(--color-white);
+  border: none;
+  border-radius: var(--radius-pill);
+  padding: 12px 24px;
+  font: inherit;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition-bounce);
+}
+
+.assistant-input-row button:hover:not(:disabled) {
+  background: var(--color-accent-dark);
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: var(--shadow-md);
+}
+
+.assistant-input-row button:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+.assistant-input-row button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* ==========================================================================
    Auth (login / signup)
    ========================================================================== */
 .auth-page {
