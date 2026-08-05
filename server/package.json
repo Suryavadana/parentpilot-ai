@@ -4,14 +4,14 @@
   "description": "",
   "type": "module",
   "main": "index.js",
- "scripts": {
-  "start": "node --experimental-strip-types index.js",
-  "dev": "nodemon --experimental-strip-types index.js",
-  "test": "echo \"Error: no test specified\" && exit 1",
-  "db:sync": "prisma db push && prisma generate",
-  "db:seed": "node prisma/seed.js",
-  "db:reset": "prisma db push --force-reset && prisma generate && npm run db:seed"
-},
+  "scripts": {
+    "start": "node --experimental-strip-types index.js",
+    "dev": "nodemon --experimental-strip-types index.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "db:sync": "prisma db push && prisma generate",
+    "db:seed": "node prisma/seed.js",
+    "db:reset": "prisma db push --force-reset && prisma generate && npm run db:seed"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -32,7 +32,8 @@
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
-    "jsonwebtoken": "^9.0.3"
+    "jsonwebtoken": "^9.0.3",
+    "multer": "^2.2.0"
   },
   "devDependencies": {
     "@types/express": "^5.0.6",

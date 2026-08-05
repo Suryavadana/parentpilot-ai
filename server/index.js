@@ -13,6 +13,7 @@ import appointmentRoutes from './routes/appointment.routes.js';
 import vaccinationRoutes from './routes/vaccination.routes.js';
 import growthRecordRoutes from './routes/growthRecord.routes.js';
 import feedbackRoutes from './routes/feedback.routes.js';
+import documentRoutes from './routes/document.routes.js';
 import authRoutes from './routes/auth.routes.js';
 import requireAuth from './middleware/requireAuth.js';
 import attachFamily from './middleware/attachFamily.js';
@@ -41,6 +42,7 @@ app.use('/api/appointments', requireAuth, attachFamily, appointmentRoutes);
 app.use('/api/vaccinations', requireAuth, attachFamily, vaccinationRoutes);
 app.use('/api/growth-records', requireAuth, attachFamily, growthRecordRoutes);
 app.use('/api/feedback', requireAuth, attachFamily, feedbackRoutes);
+app.use('/api/documents', requireAuth, attachFamily, documentRoutes);
 
 app.use((req, res) => {
   res.status(404).json({ error: 'Route not found' });

@@ -18,6 +18,7 @@ import AppointmentsPanel from './components/AppointmentsPanel';
 import VaccinationsPanel from './components/VaccinationsPanel';
 import GrowthRecordsPanel from './components/GrowthRecordsPanel';
 import FeedbackPanel from './components/FeedbackPanel';
+import DocumentVault from './components/DocumentVault';
 import ChildProfile from './components/ChildProfile';
 import Header from './components/Header';
 import AppLayout from './components/AppLayout';
@@ -297,6 +298,16 @@ function AppShell() {
             <ProtectedRoute>
               <AppLayout>
                 <RemindersDashboard />
+              </AppLayout>
+            </ProtectedRoute>
+          )}
+        />
+        <Route
+          path="/documents"
+          element={(
+            <ProtectedRoute>
+              <AppLayout>
+                <DocumentVault />
               </AppLayout>
             </ProtectedRoute>
           )}
