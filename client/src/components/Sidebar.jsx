@@ -83,6 +83,13 @@ function Sidebar() {
         </nav>
       </div>
 
+      <div className="sidebar-section">
+        <h3 className="sidebar-heading">Vault</h3>
+        <nav className="sidebar-links">
+          <Link to="/documents">Documents</Link>
+        </nav>
+      </div>
+
       {token && (
         <div className="sidebar-footer">
           <Link to="/invite">Invite</Link>

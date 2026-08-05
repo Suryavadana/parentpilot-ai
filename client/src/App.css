@@ -1178,6 +1178,22 @@ h4 {
 }
 
 /* ==========================================================================
+   Document vault
+   ========================================================================== */
+.upload-progress-track {
+  height: 6px;
+  border-radius: var(--radius-pill);
+  background: var(--color-border);
+  overflow: hidden;
+}
+
+.upload-progress-fill {
+  height: 100%;
+  background: var(--color-primary);
+  transition: width 0.15s ease;
+}
+
+/* ==========================================================================
    Auth (login / signup)
    ========================================================================== */
 .auth-page {

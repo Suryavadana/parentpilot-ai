@@ -13,14 +13,15 @@ datasource db {
 }
 
 model Family {
-  id        String   @id @default(cuid())
+  id        String     @id @default(cuid())
   name      String
   users     User[]
   children  Child[]
   events    Event[]
   doctors   Doctor[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  documents Document[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
 }
 
 model Child {
@@ -47,6 +48,7 @@ model Child {
   vaccinations      Vaccination[]
   growthRecords     GrowthRecord[]
   feedback          Feedback[]
+  documents         Document[]
   createdAt         DateTime        @default(now())
   updatedAt         DateTime        @updatedAt
 }
@@ -207,15 +209,35 @@ model Feedback {
   updatedAt DateTime @updatedAt
 }
 
+model Document {
+  id               String   @id @default(cuid())
+  fileName         String
+  mimeType         String
+  sizeBytes        Int
+  category         String
+  storagePath      String
+  iv               String
+  authTag          String
+  childId          String?
+  child            Child?   @relation(fields: [childId], references: [id])
+  familyId         String
+  family           Family   @relation(fields: [familyId], references: [id])
+  uploadedByUserId String
+  uploadedByUser   User     @relation(fields: [uploadedByUserId], references: [id])
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
+
 model User {
-  id           String   @id @default(cuid())
-  email        String   @unique
+  id           String     @id @default(cuid())
+  email        String     @unique
   passwordHash String
   fullName     String
   // Role within the user's family: "owner", "parent", or "caregiver".
-  role         String   @default("parent")
+  role         String     @default("parent")
   familyId     String
-  family       Family   @relation(fields: [familyId], references: [id])
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  family       Family     @relation(fields: [familyId], references: [id])
+  documents    Document[]
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
 }
