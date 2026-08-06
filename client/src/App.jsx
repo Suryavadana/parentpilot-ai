@@ -30,6 +30,7 @@ import AppLayout from './components/AppLayout';
 import LoginForm from './components/LoginForm';
 import SignupForm from './components/SignupForm';
 import InvitePage from './components/InvitePage';
+import AccountSettings from './components/AccountSettings';
 import JoinPage from './components/JoinPage';
 import ProtectedRoute from './components/ProtectedRoute';
 import { AuthProvider } from './context/AuthContext';
@@ -359,6 +360,16 @@ function AppShell() {
             <ProtectedRoute>
               <AppLayout>
                 <AssistantChat />
+              </AppLayout>
+            </ProtectedRoute>
+          )}
+        />
+        <Route
+          path="/settings"
+          element={(
+            <ProtectedRoute>
+              <AppLayout>
+                <AccountSettings />
               </AppLayout>
             </ProtectedRoute>
           )}

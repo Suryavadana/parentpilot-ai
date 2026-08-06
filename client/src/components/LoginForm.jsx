@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import '../App.css';
 
@@ -10,6 +10,10 @@ function LoginForm() {
   const [submitting, setSubmitting] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+  // Set by flows that redirect here after an action completes elsewhere,
+  // e.g. AccountSettings after a successful account deletion.
+  const infoMessage = location.state?.message;
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -39,6 +43,7 @@ function LoginForm() {
         <h2>Welcome back</h2>
         <p className="auth-subtitle">Log in to keep up with your family's day.</p>
 
+        {infoMessage ? <p className="form-message success">{infoMessage}</p> : null}
         {error ? <p className="form-message error">{error}</p> : null}
 
         <form className="auth-form" onSubmit={handleSubmit}>
