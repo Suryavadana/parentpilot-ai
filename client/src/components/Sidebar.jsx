@@ -19,6 +19,7 @@ function Sidebar() {
         <h3 className="sidebar-heading">Today</h3>
         <nav className="sidebar-links">
           <Link to="/today">Today</Link>
+          <Link to="/family-overview">Family Overview</Link>
           <Link to="/assistant">Assistant</Link>
         </nav>
       </div>

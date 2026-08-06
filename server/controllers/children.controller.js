@@ -16,13 +16,18 @@ const normalizeChildData = (data) => {
   return childData;
 };
 
+const fetchChildrenForFamily = async ({ familyId }) => {
+  const client = getPrismaClient();
+
+  return client.child.findMany({
+    where: { familyId },
+    orderBy: { createdAt: 'desc' },
+  });
+};
+
 const getChildren = async (req, res, next) => {
   try {
-    const client = getPrismaClient();
-    const children = await client.child.findMany({
-      where: { familyId: req.familyId },
-      orderBy: { createdAt: 'desc' },
-    });
+    const children = await fetchChildrenForFamily({ familyId: req.familyId });
 
     return res.status(200).json(children);
   } catch (error) {
@@ -142,6 +147,7 @@ const deleteChild = async (req, res, next) => {
 };
 
 export {
+  fetchChildrenForFamily,
   getChildren,
   getChildById,
   createChild,

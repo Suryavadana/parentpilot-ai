@@ -2,6 +2,7 @@ import { BrowserRouter, Route, Routes, useParams } from 'react-router-dom';
 import './App.css';
 import ChildrenList from './components/ChildrenList';
 import RemindersDashboard from './components/RemindersDashboard';
+import FamilyOverview from './components/FamilyOverview';
 import ChildForm from './components/ChildForm';
 import EventsList from './components/EventsList';
 import EventForm from './components/EventForm';
@@ -318,6 +319,16 @@ function AppShell() {
             <ProtectedRoute>
               <AppLayout>
                 <RemindersDashboard />
+              </AppLayout>
+            </ProtectedRoute>
+          )}
+        />
+        <Route
+          path="/family-overview"
+          element={(
+            <ProtectedRoute>
+              <AppLayout>
+                <FamilyOverview />
               </AppLayout>
             </ProtectedRoute>
           )}
