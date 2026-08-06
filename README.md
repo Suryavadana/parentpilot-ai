@@ -143,7 +143,4 @@ The client dev server proxies `/api` requests to the server (default
 
 This is a personal/learning project, currently in local development, with
 deployment in progress.
-
-The privacy policy at `/privacy` is currently a placeholder pending legal
-review — it has not been reviewed by a lawyer and should not be relied upon
-for an app store submission or public launch.
+The privacy policy at /privacy is a placeholder for this learning project — it will be updated before the app is made available to real users.
