@@ -2109,6 +2109,114 @@ h4 {
   cursor: not-allowed;
 }
 
+.auth-footnote-link {
+  display: inline-block;
+  margin-top: 18px;
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+  text-decoration: none;
+}
+
+.auth-footnote-link:hover {
+  text-decoration: underline;
+}
+
+/* ==========================================================================
+   Legal pages (privacy policy, etc.) — public, long-form documents, not
+   the sidebar app layout and not centered/narrow like the auth cards.
+   ========================================================================== */
+.legal-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  padding: 32px 20px 60px;
+}
+
+.legal-draft-banner {
+  width: 100%;
+  max-width: 720px;
+  background: var(--color-due-soon-bg);
+  border: 2px solid var(--color-due-soon);
+  border-radius: var(--radius-md);
+  padding: 14px 18px;
+  color: #7a4a00;
+  font-weight: 700;
+  line-height: 1.5;
+  box-sizing: border-box;
+}
+
+.legal-card {
+  width: 100%;
+  max-width: 720px;
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  border-top: 6px solid var(--color-primary);
+  box-shadow: var(--shadow-lift);
+  padding: 40px 44px;
+}
+
+.legal-back-link {
+  display: inline-block;
+  margin-bottom: 20px;
+  color: var(--color-primary-dark);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.legal-back-link:hover {
+  text-decoration: underline;
+}
+
+.legal-card h1 {
+  margin: 0 0 4px;
+  font-size: 2rem;
+}
+
+.legal-updated {
+  margin: 0 0 28px;
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+}
+
+.legal-section {
+  margin-bottom: 26px;
+}
+
+.legal-section h2 {
+  margin: 0 0 10px;
+  font-size: 1.25rem;
+  color: var(--color-text);
+}
+
+.legal-section p,
+.legal-section li {
+  color: var(--color-text);
+  line-height: 1.6;
+}
+
+.legal-section ul {
+  margin: 0;
+  padding-left: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.legal-section a {
+  color: var(--color-primary-dark);
+  font-weight: 700;
+}
+
+.legal-placeholder {
+  display: inline-block;
+  background: var(--color-due-soon-bg);
+  color: var(--color-due-soon);
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: var(--radius-sm);
+}
+
 /* ==========================================================================
    Homework / Fees (urgency-driven cards)
    ========================================================================== */
@@ -2402,6 +2510,7 @@ h4 {
 
   .child-form-card,
   .auth-card,
+  .legal-card,
   .no-children-prompt,
   .no-events-prompt {
     padding: 20px;

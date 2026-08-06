@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import '../App.css';
 
@@ -76,6 +76,8 @@ function SignupForm() {
             {submitting ? 'Signing up...' : 'Sign up'}
           </button>
         </form>
+
+        <Link to="/privacy" className="auth-footnote-link">Privacy Policy</Link>
       </section>
     </div>
   );

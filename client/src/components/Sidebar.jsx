@@ -97,6 +97,7 @@ function Sidebar() {
         <div className="sidebar-footer">
           <Link to="/invite">Invite</Link>
           <Link to="/settings">Settings</Link>
+          <Link to="/privacy">Privacy Policy</Link>
           <button type="button" className="logout-button" onClick={handleLogout}>
             Log out
           </button>

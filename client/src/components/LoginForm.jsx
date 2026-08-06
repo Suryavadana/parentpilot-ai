@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import '../App.css';
 
@@ -71,6 +71,8 @@ function LoginForm() {
             {submitting ? 'Logging in...' : 'Log in'}
           </button>
         </form>
+
+        <Link to="/privacy" className="auth-footnote-link">Privacy Policy</Link>
       </section>
     </div>
   );
