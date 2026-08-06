@@ -1188,6 +1188,121 @@ h4 {
 }
 
 /* ==========================================================================
+   Family overview
+   ========================================================================== */
+.family-overview {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.family-overview h2 {
+  margin: 0;
+  font-size: 1.6rem;
+}
+
+.family-overview-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 20px;
+}
+
+.family-overview-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  /* Grid items default to a content-based min-width, same as flex items —
+     without this, a long unbroken title or date can force the card wider
+     than its 1fr track instead of wrapping inside it. */
+  min-width: 0;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 18px;
+  box-shadow: var(--shadow-sm);
+}
+
+.family-overview-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.family-overview-avatar {
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  color: var(--color-white);
+  font-size: 1.1rem;
+}
+
+.family-overview-avatar.avatar-color-0 { background: var(--color-blue); }
+.family-overview-avatar.avatar-color-1 { background: var(--color-coral); }
+.family-overview-avatar.avatar-color-2 { background: var(--color-green); }
+.family-overview-avatar.avatar-color-3 { background: var(--color-lavender); }
+.family-overview-avatar.avatar-color-4 { background: var(--color-highlight-dark); }
+
+.family-overview-name {
+  margin: 0;
+  min-width: 0;
+  font-size: 1.1rem;
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+.family-overview-empty {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+}
+
+/* The .summary-item/.summary-meta/.reminder-item-main classes below are
+   shared with RemindersDashboard, MonthlyCalendar, and ChildProfile, where
+   the wider layout has room for the metadata to sit on one line — leave
+   those pages alone and scope the compact, wrapping layout to these
+   narrower per-child cards only. */
+.family-overview-card .summary-item {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+}
+
+.family-overview-card .reminder-item-main {
+  min-width: 0;
+  width: 100%;
+}
+
+.family-overview-card .summary-title {
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+.family-overview-card .summary-meta {
+  width: 100%;
+  white-space: normal;
+  overflow-wrap: break-word;
+}
+
+.family-overview-more {
+  align-self: flex-start;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+.family-overview-more:hover {
+  text-decoration: underline;
+}
+
+/* ==========================================================================
    Document vault
    ========================================================================== */
 .upload-progress-track {
@@ -2072,7 +2187,8 @@ h4 {
 
   .children-grid,
   .events-grid,
-  .homework-grid {
+  .homework-grid,
+  .family-overview-grid {
     grid-template-columns: 1fr;
   }
 
