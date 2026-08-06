@@ -96,6 +96,7 @@ function Sidebar() {
       {token && (
         <div className="sidebar-footer">
           <Link to="/invite">Invite</Link>
+          <Link to="/settings">Settings</Link>
           <button type="button" className="logout-button" onClick={handleLogout}>
             Log out
           </button>
