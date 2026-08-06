@@ -16,6 +16,7 @@ function Header() {
       )}
       {!token && (
         <nav className="app-header-nav">
+          <Link to="/privacy">Privacy Policy</Link>
           <Link to="/login">Log in</Link>
           <Link to="/signup">Sign up</Link>
         </nav>

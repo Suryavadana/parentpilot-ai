@@ -31,6 +31,7 @@ import LoginForm from './components/LoginForm';
 import SignupForm from './components/SignupForm';
 import InvitePage from './components/InvitePage';
 import AccountSettings from './components/AccountSettings';
+import PrivacyPolicy from './components/PrivacyPolicy';
 import JoinPage from './components/JoinPage';
 import ProtectedRoute from './components/ProtectedRoute';
 import { AuthProvider } from './context/AuthContext';
@@ -68,6 +69,7 @@ function AppShell() {
         <Route path="/login" element={<main className="app-shell"><LoginForm /></main>} />
         <Route path="/signup" element={<main className="app-shell"><SignupForm /></main>} />
         <Route path="/join" element={<main className="app-shell"><JoinPage /></main>} />
+        <Route path="/privacy" element={<main className="app-shell"><PrivacyPolicy /></main>} />
         <Route
           path="/invite"
           element={(
