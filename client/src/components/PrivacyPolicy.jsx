@@ -12,10 +12,8 @@ function PrivacyPolicy() {
       <div className="legal-draft-banner" role="alert">
         ⚠️ Placeholder Document — This is a draft privacy policy for a
         personal learning/portfolio project, currently in development and
-        testing. It has not been reviewed by a lawyer and should not be
-        relied upon for a real app store submission or public launch. It
-        will be replaced with a reviewed, finalized policy before any real
-        release.
+        testing. This document is not final and will be updated before the
+        app is made available to real users.
       </div>
 
       <article className="legal-card">
