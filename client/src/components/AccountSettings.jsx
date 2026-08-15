@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import api from '../api';
 import { useAuth } from '../context/AuthContext';
 import '../App.css';
 
@@ -26,7 +26,7 @@ function AccountSettings() {
     setMembersLoading(true);
     setMembersError('');
 
-    axios.get('/api/auth/members')
+    api.get('/api/auth/members')
       .then((response) => setMembers(response.data))
       .catch((err) => setMembersError(err.response?.data?.error || 'Unable to load family members right now.'))
       .finally(() => setMembersLoading(false));
@@ -48,7 +48,7 @@ function AccountSettings() {
     setMembersError('');
 
     try {
-      await axios.delete(`/api/auth/members/${member.id}`);
+      await api.delete(`/api/auth/members/${member.id}`);
       loadMembers();
     } catch (err) {
       setMembersError(err.response?.data?.error || 'Unable to remove this member right now.');
@@ -75,7 +75,7 @@ function AccountSettings() {
     setError('');
 
     try {
-      await axios.delete('/api/auth/me', { data: { password } });
+      await api.delete('/api/auth/me', { data: { password } });
       logout();
       navigate('/login', { state: { message: 'Your account has been deleted.' } });
     } catch (err) {

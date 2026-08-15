@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+import api from '../api';
 import '../App.css';
 
 const emptyForm = {
@@ -32,7 +32,7 @@ function ChildForm({ childId, onSaved }) {
       setError('');
 
       try {
-        const response = await axios.get(`/api/children/${childId}`);
+        const response = await api.get(`/api/children/${childId}`);
         const child = response.data;
 
         setFormData({
@@ -79,10 +79,10 @@ function ChildForm({ childId, onSaved }) {
       };
 
       if (childId) {
-        await axios.put(`/api/children/${childId}`, payload);
+        await api.put(`/api/children/${childId}`, payload);
         setSuccessMessage('Child profile updated successfully.');
       } else {
-        await axios.post('/api/children', payload);
+        await api.post('/api/children', payload);
         setSuccessMessage('Child profile created successfully.');
         setFormData(emptyForm);
       }

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+import api from '../api';
 import { useChild } from '../context/ChildContext';
 import NoChildrenPrompt from './NoChildrenPrompt';
 import GrowthRecordForm from './GrowthRecordForm';
@@ -44,7 +44,7 @@ function GrowthRecordsPanel() {
     setLoading(true);
 
     try {
-      const response = await axios.get('/api/growth-records', {
+      const response = await api.get('/api/growth-records', {
         params: { childId: selectedChildId },
       });
       setGrowthRecords(response.data);
@@ -86,7 +86,7 @@ function GrowthRecordsPanel() {
     if (!confirmed) return;
 
     try {
-      await axios.delete(`/api/growth-records/${id}`);
+      await api.delete(`/api/growth-records/${id}`);
       setGrowthRecords((current) => current.filter((item) => item.id !== id));
     } catch (err) {
       alert('Unable to delete this growth record right now.');

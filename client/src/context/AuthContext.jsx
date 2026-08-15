@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from 'react';
-import axios from 'axios';
+import api from '../api';
 
 const AuthContext = createContext(null);
 
@@ -10,7 +10,7 @@ const TOKEN_KEY = 'token';
 // useEffects run bottom-up on mount (children before parents), so a descendant
 // component's own data-fetching effect can otherwise race ahead of
 // AuthProvider's effect and go out with no Authorization header.
-axios.interceptors.request.use((config) => {
+api.interceptors.request.use((config) => {
   const storedToken = localStorage.getItem(TOKEN_KEY);
 
   if (storedToken) {
@@ -26,7 +26,7 @@ function AuthProvider({ children }) {
   const [loading, setLoading] = useState(Boolean(localStorage.getItem(TOKEN_KEY)));
 
   useEffect(() => {
-    const responseInterceptor = axios.interceptors.response.use(
+    const responseInterceptor = api.interceptors.response.use(
       (response) => response,
       (error) => {
         if (error.response?.status === 401) {
@@ -41,7 +41,7 @@ function AuthProvider({ children }) {
     );
 
     return () => {
-      axios.interceptors.response.eject(responseInterceptor);
+      api.interceptors.response.eject(responseInterceptor);
     };
   }, []);
 
@@ -55,7 +55,7 @@ function AuthProvider({ children }) {
     let cancelled = false;
     setLoading(true);
 
-    axios.get('/api/auth/me')
+    api.get('/api/auth/me')
       .then((response) => {
         if (!cancelled) {
           setUser(response.data);
@@ -78,13 +78,13 @@ function AuthProvider({ children }) {
   }, [token]);
 
   const login = async (email, password) => {
-    const response = await axios.post('/api/auth/login', { email, password });
+    const response = await api.post('/api/auth/login', { email, password });
     localStorage.setItem(TOKEN_KEY, response.data.token);
     setToken(response.data.token);
   };
 
   const signup = async (email, password, fullName) => {
-    const response = await axios.post('/api/auth/signup', { email, password, fullName });
+    const response = await api.post('/api/auth/signup', { email, password, fullName });
     localStorage.setItem(TOKEN_KEY, response.data.token);
     setToken(response.data.token);
   };
@@ -96,12 +96,12 @@ function AuthProvider({ children }) {
   };
 
   const generateInvite = async (role) => {
-    const response = await axios.post('/api/auth/invite', { role });
+    const response = await api.post('/api/auth/invite', { role });
     return response.data.inviteToken;
   };
 
   const joinFamily = async (inviteToken, email, password, fullName) => {
-    const response = await axios.post('/api/auth/join', {
+    const response = await api.post('/api/auth/join', {
       inviteToken, email, password, fullName,
     });
     localStorage.setItem(TOKEN_KEY, response.data.token);

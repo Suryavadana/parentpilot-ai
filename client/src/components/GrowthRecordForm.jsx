@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+import api from '../api';
 import '../App.css';
 
 const emptyForm = {
@@ -26,7 +26,7 @@ function GrowthRecordForm({ growthRecordId, onSaved }) {
   useEffect(() => {
     const fetchChildren = async () => {
       try {
-        const response = await axios.get('/api/children');
+        const response = await api.get('/api/children');
         setChildren(response.data);
       } catch (err) {
         // Children dropdown is required to submit; leave it empty if it fails to load.
@@ -48,7 +48,7 @@ function GrowthRecordForm({ growthRecordId, onSaved }) {
       setError('');
 
       try {
-        const response = await axios.get(`/api/growth-records/${growthRecordId}`);
+        const response = await api.get(`/api/growth-records/${growthRecordId}`);
         const growthRecord = response.data;
 
         setFormData({
@@ -107,10 +107,10 @@ function GrowthRecordForm({ growthRecordId, onSaved }) {
       };
 
       if (growthRecordId) {
-        await axios.put(`/api/growth-records/${growthRecordId}`, payload);
+        await api.put(`/api/growth-records/${growthRecordId}`, payload);
         setSuccessMessage('Growth record updated successfully.');
       } else {
-        await axios.post('/api/growth-records', payload);
+        await api.post('/api/growth-records', payload);
         setSuccessMessage('Growth record created successfully.');
         setFormData(emptyForm);
       }

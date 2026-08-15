@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+import api from '../api';
 import { useChild } from '../context/ChildContext';
 import NoChildrenPrompt from './NoChildrenPrompt';
 import ActivityForm from './ActivityForm';
@@ -36,7 +36,7 @@ function ActivitiesPanel() {
     setLoading(true);
 
     try {
-      const response = await axios.get('/api/activities', {
+      const response = await api.get('/api/activities', {
         params: { childId: selectedChildId },
       });
       setActivities(response.data);
@@ -78,7 +78,7 @@ function ActivitiesPanel() {
     if (!confirmed) return;
 
     try {
-      await axios.delete(`/api/activities/${id}`);
+      await api.delete(`/api/activities/${id}`);
       setActivities((current) => current.filter((item) => item.id !== id));
     } catch (err) {
       alert('Unable to delete this activity right now.');

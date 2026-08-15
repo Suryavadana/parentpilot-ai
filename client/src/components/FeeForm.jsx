@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+import api from '../api';
 import '../App.css';
 
 const emptyForm = {
@@ -26,7 +26,7 @@ function FeeForm({ feeId, onSaved }) {
   useEffect(() => {
     const fetchChildren = async () => {
       try {
-        const response = await axios.get('/api/children');
+        const response = await api.get('/api/children');
         setChildren(response.data);
       } catch (err) {
         // Children dropdown is required to submit; leave it empty if it fails to load.
@@ -48,7 +48,7 @@ function FeeForm({ feeId, onSaved }) {
       setError('');
 
       try {
-        const response = await axios.get(`/api/fees/${feeId}`);
+        const response = await api.get(`/api/fees/${feeId}`);
         const fee = response.data;
 
         setFormData({
@@ -95,10 +95,10 @@ function FeeForm({ feeId, onSaved }) {
       };
 
       if (feeId) {
-        await axios.put(`/api/fees/${feeId}`, payload);
+        await api.put(`/api/fees/${feeId}`, payload);
         setSuccessMessage('Fee updated successfully.');
       } else {
-        await axios.post('/api/fees', payload);
+        await api.post('/api/fees', payload);
         setSuccessMessage('Fee created successfully.');
         setFormData(emptyForm);
       }

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+import api from '../api';
 import '../App.css';
 
 const emptyForm = {
@@ -28,7 +28,7 @@ function MedicationForm({ medicationId, onSaved }) {
   useEffect(() => {
     const fetchChildren = async () => {
       try {
-        const response = await axios.get('/api/children');
+        const response = await api.get('/api/children');
         setChildren(response.data);
       } catch (err) {
         // Children dropdown is required to submit; leave it empty if it fails to load.
@@ -50,7 +50,7 @@ function MedicationForm({ medicationId, onSaved }) {
       setError('');
 
       try {
-        const response = await axios.get(`/api/medications/${medicationId}`);
+        const response = await api.get(`/api/medications/${medicationId}`);
         const medication = response.data;
 
         setFormData({
@@ -110,10 +110,10 @@ function MedicationForm({ medicationId, onSaved }) {
       };
 
       if (medicationId) {
-        await axios.put(`/api/medications/${medicationId}`, payload);
+        await api.put(`/api/medications/${medicationId}`, payload);
         setSuccessMessage('Medication updated successfully.');
       } else {
-        await axios.post('/api/medications', payload);
+        await api.post('/api/medications', payload);
         setSuccessMessage('Medication created successfully.');
         setFormData(emptyForm);
       }

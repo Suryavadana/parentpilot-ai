@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import axios from 'axios';
+import api from '../api';
 import '../App.css';
 
 const PROPOSAL_ENDPOINTS = {
@@ -85,8 +85,8 @@ function AssistantChat() {
     // Proposal cards must show human-readable names, not raw ids — otherwise
     // the user has no real way to catch the assistant proposing the wrong
     // child or doctor before confirming.
-    axios.get('/api/children').then((response) => setChildren(response.data)).catch(() => {});
-    axios.get('/api/doctors').then((response) => setDoctors(response.data)).catch(() => {});
+    api.get('/api/children').then((response) => setChildren(response.data)).catch(() => {});
+    api.get('/api/doctors').then((response) => setDoctors(response.data)).catch(() => {});
   }, []);
 
   const getChildName = (childId) => {
@@ -131,7 +131,7 @@ function AssistantChat() {
     updateProposal(messageId, proposal.id, { status: 'saving', error: '' });
 
     try {
-      await axios.post(endpoint, buildProposalPayload(proposal));
+      await api.post(endpoint, buildProposalPayload(proposal));
       updateProposal(messageId, proposal.id, { status: 'saved' });
     } catch (err) {
       updateProposal(messageId, proposal.id, {
@@ -150,7 +150,7 @@ function AssistantChat() {
     setSending(true);
 
     try {
-      const response = await axios.post('/api/assistant/chat', {
+      const response = await api.post('/api/assistant/chat', {
         message: trimmed,
         history,
       });

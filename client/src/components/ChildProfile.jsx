@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import axios from 'axios';
+import api from '../api';
 import '../App.css';
 
 const calculateAge = (dateOfBirth) => {
@@ -66,11 +66,11 @@ function ChildProfile() {
 
       try {
         const [childRes, homeworkRes, feesRes, eventsRes, scheduleRes] = await Promise.all([
-          axios.get(`/api/children/${id}`),
-          axios.get('/api/homework', { params: { childId: id } }),
-          axios.get('/api/fees', { params: { childId: id } }),
-          axios.get('/api/events', { params: { childId: id } }),
-          axios.get('/api/daily-schedule', { params: { childId: id } }),
+          api.get(`/api/children/${id}`),
+          api.get('/api/homework', { params: { childId: id } }),
+          api.get('/api/fees', { params: { childId: id } }),
+          api.get('/api/events', { params: { childId: id } }),
+          api.get('/api/daily-schedule', { params: { childId: id } }),
         ]);
 
         if (cancelled) return;

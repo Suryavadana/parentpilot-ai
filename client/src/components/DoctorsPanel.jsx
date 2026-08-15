@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+import api from '../api';
 import { useChild } from '../context/ChildContext';
 import DoctorForm from './DoctorForm';
 import '../App.css';
@@ -16,7 +16,7 @@ function DoctorsPanel() {
     setLoading(true);
 
     try {
-      const response = await axios.get('/api/doctors', {
+      const response = await api.get('/api/doctors', {
         params: selectedChildId ? { childId: selectedChildId } : {},
       });
       setDoctors(response.data);
@@ -58,7 +58,7 @@ function DoctorsPanel() {
     if (!confirmed) return;
 
     try {
-      await axios.delete(`/api/doctors/${id}`);
+      await api.delete(`/api/doctors/${id}`);
       setDoctors((current) => current.filter((item) => item.id !== id));
     } catch (err) {
       alert('Unable to delete this doctor right now.');

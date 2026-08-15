@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+import api from '../api';
 import { Link } from 'react-router-dom';
 import { useChild } from '../context/ChildContext';
 import NoChildrenPrompt from './NoChildrenPrompt';
@@ -41,7 +41,7 @@ function HomeworkList() {
       setLoading(true);
 
       try {
-        const response = await axios.get('/api/homework', {
+        const response = await api.get('/api/homework', {
           params: { childId: selectedChildId },
         });
         setHomework(response.data);
@@ -61,7 +61,7 @@ function HomeworkList() {
     if (!confirmed) return;
 
     try {
-      await axios.delete(`/api/homework/${id}`);
+      await api.delete(`/api/homework/${id}`);
       setHomework((current) => current.filter((item) => item.id !== id));
     } catch (err) {
       alert('Unable to delete this homework right now.');

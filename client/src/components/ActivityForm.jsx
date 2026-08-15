@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+import api from '../api';
 import '../App.css';
 
 const DAYS = [
@@ -36,7 +36,7 @@ function ActivityForm({ activityId, onSaved }) {
   useEffect(() => {
     const fetchChildren = async () => {
       try {
-        const response = await axios.get('/api/children');
+        const response = await api.get('/api/children');
         setChildren(response.data);
       } catch (err) {
         // Children dropdown is required to submit; leave it empty if it fails to load.
@@ -58,7 +58,7 @@ function ActivityForm({ activityId, onSaved }) {
       setError('');
 
       try {
-        const response = await axios.get(`/api/activities/${activityId}`);
+        const response = await api.get(`/api/activities/${activityId}`);
         const activity = response.data;
 
         setFormData({
@@ -120,10 +120,10 @@ function ActivityForm({ activityId, onSaved }) {
       };
 
       if (activityId) {
-        await axios.put(`/api/activities/${activityId}`, payload);
+        await api.put(`/api/activities/${activityId}`, payload);
         setSuccessMessage('Activity updated successfully.');
       } else {
-        await axios.post('/api/activities', payload);
+        await api.post('/api/activities', payload);
         setSuccessMessage('Activity created successfully.');
         setFormData(emptyForm);
       }

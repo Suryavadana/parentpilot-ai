@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+import api from '../api';
 import { Link } from 'react-router-dom';
 import EventForm from './EventForm';
 import '../App.css';
@@ -32,7 +32,7 @@ function EventsList() {
 
   const fetchEvents = async () => {
     try {
-      const response = await axios.get('/api/events');
+      const response = await api.get('/api/events');
       setEvents(response.data);
     } catch (err) {
       setError('Unable to load events right now.');
@@ -50,7 +50,7 @@ function EventsList() {
     if (!confirmed) return;
 
     try {
-      await axios.delete(`/api/events/${id}`);
+      await api.delete(`/api/events/${id}`);
       setEvents((current) => current.filter((event) => event.id !== id));
     } catch (err) {
       alert('Unable to delete this event right now.');

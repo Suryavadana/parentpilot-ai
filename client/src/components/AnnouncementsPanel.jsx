@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+import api from '../api';
 import { useChild } from '../context/ChildContext';
 import AnnouncementForm from './AnnouncementForm';
 import '../App.css';
@@ -40,7 +40,7 @@ function AnnouncementsPanel() {
       // because the API's childId filter is an exact match — passing the
       // selected child would silently hide family-wide announcements. We
       // filter to "this child or family-wide" below instead.
-      const response = await axios.get('/api/events', {
+      const response = await api.get('/api/events', {
         params: { category: 'announcement' },
       });
       setAnnouncements(response.data);
@@ -85,7 +85,7 @@ function AnnouncementsPanel() {
     if (!confirmed) return;
 
     try {
-      await axios.delete(`/api/events/${id}`);
+      await api.delete(`/api/events/${id}`);
       setAnnouncements((current) => current.filter((event) => event.id !== id));
     } catch (err) {
       alert('Unable to delete this announcement right now.');

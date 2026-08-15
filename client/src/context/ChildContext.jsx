@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from 'react';
-import axios from 'axios';
+import api from '../api';
 import { useAuth } from './AuthContext';
 
 const ChildContext = createContext(null);
@@ -21,7 +21,7 @@ function ChildProvider({ children }) {
     let cancelled = false;
     setLoading(true);
 
-    axios.get('/api/children')
+    api.get('/api/children')
       .then((response) => {
         if (cancelled) return;
 

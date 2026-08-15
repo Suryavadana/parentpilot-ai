@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+import api from '../api';
 import '../App.css';
 
 const emptyForm = {
@@ -28,7 +28,7 @@ function AppointmentForm({ appointmentId, onSaved }) {
   useEffect(() => {
     const fetchChildren = async () => {
       try {
-        const response = await axios.get('/api/children');
+        const response = await api.get('/api/children');
         setChildren(response.data);
       } catch (err) {
         // Children dropdown is required to submit; leave it empty if it fails to load.
@@ -37,7 +37,7 @@ function AppointmentForm({ appointmentId, onSaved }) {
 
     const fetchDoctors = async () => {
       try {
-        const response = await axios.get('/api/doctors');
+        const response = await api.get('/api/doctors');
         setDoctors(response.data);
       } catch (err) {
         // Doctor dropdown is optional; leave it empty if it fails to load.
@@ -60,7 +60,7 @@ function AppointmentForm({ appointmentId, onSaved }) {
       setError('');
 
       try {
-        const response = await axios.get(`/api/appointments/${appointmentId}`);
+        const response = await api.get(`/api/appointments/${appointmentId}`);
         const appointment = response.data;
 
         setFormData({
@@ -112,10 +112,10 @@ function AppointmentForm({ appointmentId, onSaved }) {
       };
 
       if (appointmentId) {
-        await axios.put(`/api/appointments/${appointmentId}`, payload);
+        await api.put(`/api/appointments/${appointmentId}`, payload);
         setSuccessMessage('Appointment updated successfully.');
       } else {
-        await axios.post('/api/appointments', payload);
+        await api.post('/api/appointments', payload);
         setSuccessMessage('Appointment created successfully.');
         setFormData(emptyForm);
       }

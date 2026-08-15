@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+import api from '../api';
 import '../App.css';
 
 const emptyForm = {
@@ -25,7 +25,7 @@ function AnnouncementForm({ announcementId, onSaved }) {
   useEffect(() => {
     const fetchChildren = async () => {
       try {
-        const response = await axios.get('/api/children');
+        const response = await api.get('/api/children');
         setChildren(response.data);
       } catch (err) {
         // Child dropdown is optional; leave it empty if it fails to load.
@@ -47,7 +47,7 @@ function AnnouncementForm({ announcementId, onSaved }) {
       setError('');
 
       try {
-        const response = await axios.get(`/api/events/${announcementId}`);
+        const response = await api.get(`/api/events/${announcementId}`);
         const announcement = response.data;
 
         setFormData({
@@ -93,10 +93,10 @@ function AnnouncementForm({ announcementId, onSaved }) {
       };
 
       if (announcementId) {
-        await axios.put(`/api/events/${announcementId}`, payload);
+        await api.put(`/api/events/${announcementId}`, payload);
         setSuccessMessage('Announcement updated successfully.');
       } else {
-        await axios.post('/api/events', payload);
+        await api.post('/api/events', payload);
         setSuccessMessage('Announcement created successfully.');
         setFormData(emptyForm);
       }

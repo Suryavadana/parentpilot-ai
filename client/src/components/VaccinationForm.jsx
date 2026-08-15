@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+import api from '../api';
 import '../App.css';
 
 const emptyForm = {
@@ -28,7 +28,7 @@ function VaccinationForm({ vaccinationId, onSaved }) {
   useEffect(() => {
     const fetchChildren = async () => {
       try {
-        const response = await axios.get('/api/children');
+        const response = await api.get('/api/children');
         setChildren(response.data);
       } catch (err) {
         // Children dropdown is required to submit; leave it empty if it fails to load.
@@ -50,7 +50,7 @@ function VaccinationForm({ vaccinationId, onSaved }) {
       setError('');
 
       try {
-        const response = await axios.get(`/api/vaccinations/${vaccinationId}`);
+        const response = await api.get(`/api/vaccinations/${vaccinationId}`);
         const vaccination = response.data;
 
         setFormData({
@@ -106,10 +106,10 @@ function VaccinationForm({ vaccinationId, onSaved }) {
       };
 
       if (vaccinationId) {
-        await axios.put(`/api/vaccinations/${vaccinationId}`, payload);
+        await api.put(`/api/vaccinations/${vaccinationId}`, payload);
         setSuccessMessage('Vaccination updated successfully.');
       } else {
-        await axios.post('/api/vaccinations', payload);
+        await api.post('/api/vaccinations', payload);
         setSuccessMessage('Vaccination created successfully.');
         setFormData(emptyForm);
       }

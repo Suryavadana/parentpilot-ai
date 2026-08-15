@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+import api from '../api';
 import { useChild } from '../context/ChildContext';
 import NoChildrenPrompt from './NoChildrenPrompt';
 import MedicationForm from './MedicationForm';
@@ -40,7 +40,7 @@ function MedicationsPanel() {
     setLoading(true);
 
     try {
-      const response = await axios.get('/api/medications', {
+      const response = await api.get('/api/medications', {
         params: { childId: selectedChildId },
       });
       setMedications(response.data);
@@ -82,7 +82,7 @@ function MedicationsPanel() {
     if (!confirmed) return;
 
     try {
-      await axios.delete(`/api/medications/${id}`);
+      await api.delete(`/api/medications/${id}`);
       setMedications((current) => current.filter((item) => item.id !== id));
     } catch (err) {
       alert('Unable to delete this medication right now.');
