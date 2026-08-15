@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+import api from '../api';
 import '../App.css';
 
 const emptyForm = {
@@ -27,7 +27,7 @@ function HomeworkForm({ homeworkId, onSaved }) {
   useEffect(() => {
     const fetchChildren = async () => {
       try {
-        const response = await axios.get('/api/children');
+        const response = await api.get('/api/children');
         setChildren(response.data);
       } catch (err) {
         // Children dropdown is required to submit; leave it empty if it fails to load.
@@ -49,7 +49,7 @@ function HomeworkForm({ homeworkId, onSaved }) {
       setError('');
 
       try {
-        const response = await axios.get(`/api/homework/${homeworkId}`);
+        const response = await api.get(`/api/homework/${homeworkId}`);
         const homework = response.data;
 
         setFormData({
@@ -99,10 +99,10 @@ function HomeworkForm({ homeworkId, onSaved }) {
       };
 
       if (homeworkId) {
-        await axios.put(`/api/homework/${homeworkId}`, payload);
+        await api.put(`/api/homework/${homeworkId}`, payload);
         setSuccessMessage('Homework updated successfully.');
       } else {
-        await axios.post('/api/homework', payload);
+        await api.post('/api/homework', payload);
         setSuccessMessage('Homework created successfully.');
         setFormData(emptyForm);
       }

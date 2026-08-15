@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+import api from '../api';
 import { useChild } from '../context/ChildContext';
 import NoChildrenPrompt from './NoChildrenPrompt';
 import VaccinationForm from './VaccinationForm';
@@ -33,7 +33,7 @@ function VaccinationsPanel() {
     setLoading(true);
 
     try {
-      const response = await axios.get('/api/vaccinations', {
+      const response = await api.get('/api/vaccinations', {
         params: { childId: selectedChildId },
       });
       setVaccinations(response.data);
@@ -75,7 +75,7 @@ function VaccinationsPanel() {
     if (!confirmed) return;
 
     try {
-      await axios.delete(`/api/vaccinations/${id}`);
+      await api.delete(`/api/vaccinations/${id}`);
       setVaccinations((current) => current.filter((item) => item.id !== id));
     } catch (err) {
       alert('Unable to delete this vaccination right now.');

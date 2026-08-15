@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+import api from '../api';
 import '../App.css';
 
 const emptyForm = {
@@ -23,7 +23,7 @@ function DoctorForm({ doctorId, onSaved }) {
   useEffect(() => {
     const fetchChildren = async () => {
       try {
-        const response = await axios.get('/api/children');
+        const response = await api.get('/api/children');
         setChildren(response.data);
       } catch (err) {
         // Child dropdown is optional here; leave it empty if it fails to load.
@@ -45,7 +45,7 @@ function DoctorForm({ doctorId, onSaved }) {
       setError('');
 
       try {
-        const response = await axios.get(`/api/doctors/${doctorId}`);
+        const response = await api.get(`/api/doctors/${doctorId}`);
         const doctor = response.data;
 
         setFormData({
@@ -99,10 +99,10 @@ function DoctorForm({ doctorId, onSaved }) {
       };
 
       if (doctorId) {
-        await axios.put(`/api/doctors/${doctorId}`, payload);
+        await api.put(`/api/doctors/${doctorId}`, payload);
         setSuccessMessage('Doctor updated successfully.');
       } else {
-        await axios.post('/api/doctors', payload);
+        await api.post('/api/doctors', payload);
         setSuccessMessage('Doctor created successfully.');
         setFormData(emptyForm);
       }

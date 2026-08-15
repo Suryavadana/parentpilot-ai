@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+import api from '../api';
 import { useChild } from '../context/ChildContext';
 import NoChildrenPrompt from './NoChildrenPrompt';
 import '../App.css';
@@ -52,7 +52,7 @@ function DailyScheduleGrid() {
     setLoading(true);
 
     try {
-      const response = await axios.get('/api/daily-schedule', {
+      const response = await api.get('/api/daily-schedule', {
         params: { childId: selectedChildId },
       });
       setSchedule(response.data);
@@ -122,9 +122,9 @@ function DailyScheduleGrid() {
       };
 
       if (formEntry?.id) {
-        await axios.put(`/api/daily-schedule/${formEntry.id}`, payload);
+        await api.put(`/api/daily-schedule/${formEntry.id}`, payload);
       } else {
-        await axios.post('/api/daily-schedule', payload);
+        await api.post('/api/daily-schedule', payload);
       }
 
       closeForm();
@@ -141,7 +141,7 @@ function DailyScheduleGrid() {
     if (!confirmed) return;
 
     try {
-      await axios.delete(`/api/daily-schedule/${id}`);
+      await api.delete(`/api/daily-schedule/${id}`);
       setSchedule((current) => current.filter((entry) => entry.id !== id));
     } catch (err) {
       alert('Unable to delete this period right now.');

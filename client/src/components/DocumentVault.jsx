@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import axios from 'axios';
+import api from '../api';
 import { useChild } from '../context/ChildContext';
 import '../App.css';
 
@@ -57,7 +57,7 @@ function DocumentVault() {
     setLoading(true);
 
     try {
-      const response = await axios.get('/api/documents', {
+      const response = await api.get('/api/documents', {
         params: selectedChildId ? { childId: selectedChildId } : {},
       });
       setDocuments(response.data);
@@ -81,7 +81,7 @@ function DocumentVault() {
   useEffect(() => {
     const fetchChildren = async () => {
       try {
-        const response = await axios.get('/api/children');
+        const response = await api.get('/api/children');
         setChildren(response.data);
       } catch (err) {
         // Child dropdown is optional; leave it empty if it fails to load.
@@ -139,7 +139,7 @@ function DocumentVault() {
     setUploadProgress(0);
 
     try {
-      await axios.post('/api/documents', formData, {
+      await api.post('/api/documents', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
         onUploadProgress: (progressEvent) => {
           if (!progressEvent.total) return;
@@ -163,7 +163,7 @@ function DocumentVault() {
 
   const handleDownload = async (doc) => {
     try {
-      const response = await axios.get(`/api/documents/${doc.id}/download`, {
+      const response = await api.get(`/api/documents/${doc.id}/download`, {
         responseType: 'blob',
       });
 
@@ -186,7 +186,7 @@ function DocumentVault() {
     if (!confirmed) return;
 
     try {
-      await axios.delete(`/api/documents/${id}`);
+      await api.delete(`/api/documents/${id}`);
       setDocuments((current) => current.filter((item) => item.id !== id));
     } catch (err) {
       alert('Unable to delete this document right now.');

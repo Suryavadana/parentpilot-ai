@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+import api from '../api';
 import { Link } from 'react-router-dom';
 import { useChild } from '../context/ChildContext';
 import NoChildrenPrompt from './NoChildrenPrompt';
@@ -79,11 +79,11 @@ function RemindersDashboard() {
 
       try {
         const results = await Promise.allSettled([
-          axios.get('/api/homework', { params: { childId: selectedChildId } }),
-          axios.get('/api/fees', { params: { childId: selectedChildId } }),
-          axios.get('/api/appointments', { params: { childId: selectedChildId } }),
-          axios.get('/api/events', { params: { childId: selectedChildId } }),
-          axios.get('/api/medications', { params: { childId: selectedChildId } }),
+          api.get('/api/homework', { params: { childId: selectedChildId } }),
+          api.get('/api/fees', { params: { childId: selectedChildId } }),
+          api.get('/api/appointments', { params: { childId: selectedChildId } }),
+          api.get('/api/events', { params: { childId: selectedChildId } }),
+          api.get('/api/medications', { params: { childId: selectedChildId } }),
         ]);
 
         if (cancelled) return;

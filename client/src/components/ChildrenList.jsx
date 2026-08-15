@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+import api from '../api';
 import { Link } from 'react-router-dom';
 import ChildForm from './ChildForm';
 import '../App.css';
@@ -27,7 +27,7 @@ function ChildrenList() {
 
   const fetchChildren = async () => {
     try {
-      const response = await axios.get('/api/children');
+      const response = await api.get('/api/children');
       setChildren(response.data);
     } catch (err) {
       setError('Unable to load children right now.');
@@ -45,7 +45,7 @@ function ChildrenList() {
     if (!confirmed) return;
 
     try {
-      await axios.delete(`/api/children/${id}`);
+      await api.delete(`/api/children/${id}`);
       setChildren((current) => current.filter((child) => child.id !== id));
     } catch (err) {
       alert('Unable to delete this profile right now.');

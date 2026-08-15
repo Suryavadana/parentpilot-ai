@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import axios from 'axios';
+import api from '../api';
 import '../App.css';
 
 const formatDate = (value) => new Date(value).toLocaleDateString(undefined, {
@@ -23,8 +23,8 @@ function VaccinationRecord() {
 
       try {
         const [childRes, vaccinationsRes] = await Promise.all([
-          axios.get(`/api/children/${id}`),
-          axios.get('/api/vaccinations', { params: { childId: id } }),
+          api.get(`/api/children/${id}`),
+          api.get('/api/vaccinations', { params: { childId: id } }),
         ]);
 
         if (cancelled) return;

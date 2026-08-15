@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+import api from '../api';
 import { useChild } from '../context/ChildContext';
 import NoChildrenPrompt from './NoChildrenPrompt';
 import AppointmentForm from './AppointmentForm';
@@ -44,7 +44,7 @@ function AppointmentsPanel() {
     setLoading(true);
 
     try {
-      const response = await axios.get('/api/appointments', {
+      const response = await api.get('/api/appointments', {
         params: { childId: selectedChildId },
       });
       setAppointments(response.data);
@@ -86,7 +86,7 @@ function AppointmentsPanel() {
     if (!confirmed) return;
 
     try {
-      await axios.delete(`/api/appointments/${id}`);
+      await api.delete(`/api/appointments/${id}`);
       setAppointments((current) => current.filter((item) => item.id !== id));
     } catch (err) {
       alert('Unable to delete this appointment right now.');

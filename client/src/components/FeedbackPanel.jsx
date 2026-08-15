@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+import api from '../api';
 import { useChild } from '../context/ChildContext';
 import NoChildrenPrompt from './NoChildrenPrompt';
 import FeedbackForm from './FeedbackForm';
@@ -40,7 +40,7 @@ function FeedbackPanel() {
     setLoading(true);
 
     try {
-      const response = await axios.get('/api/feedback', {
+      const response = await api.get('/api/feedback', {
         params: { childId: selectedChildId },
       });
       setFeedback(response.data);
@@ -82,7 +82,7 @@ function FeedbackPanel() {
     if (!confirmed) return;
 
     try {
-      await axios.delete(`/api/feedback/${id}`);
+      await api.delete(`/api/feedback/${id}`);
       setFeedback((current) => current.filter((item) => item.id !== id));
     } catch (err) {
       alert('Unable to delete this feedback right now.');

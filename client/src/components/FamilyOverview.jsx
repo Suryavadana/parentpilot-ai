@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+import api from '../api';
 import { Link } from 'react-router-dom';
 import { useChild } from '../context/ChildContext';
 import NoChildrenPrompt from './NoChildrenPrompt';
@@ -57,11 +57,11 @@ const dataOrEmpty = (result) => (result.status === 'fulfilled' ? result.value.da
 
 const fetchChildSummary = async (childId) => {
   const results = await Promise.allSettled([
-    axios.get('/api/homework', { params: { childId } }),
-    axios.get('/api/fees', { params: { childId } }),
-    axios.get('/api/appointments', { params: { childId } }),
-    axios.get('/api/events', { params: { childId } }),
-    axios.get('/api/medications', { params: { childId } }),
+    api.get('/api/homework', { params: { childId } }),
+    api.get('/api/fees', { params: { childId } }),
+    api.get('/api/appointments', { params: { childId } }),
+    api.get('/api/events', { params: { childId } }),
+    api.get('/api/medications', { params: { childId } }),
   ]);
 
   if (results.some(isRealFailure)) {

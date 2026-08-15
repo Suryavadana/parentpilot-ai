@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+import api from '../api';
 import { Link } from 'react-router-dom';
 import { useChild } from '../context/ChildContext';
 import NoChildrenPrompt from './NoChildrenPrompt';
@@ -48,7 +48,7 @@ function FeesList() {
       setLoading(true);
 
       try {
-        const response = await axios.get('/api/fees', {
+        const response = await api.get('/api/fees', {
           params: { childId: selectedChildId },
         });
         setFees(response.data);
@@ -72,7 +72,7 @@ function FeesList() {
     if (!confirmed) return;
 
     try {
-      await axios.delete(`/api/fees/${id}`);
+      await api.delete(`/api/fees/${id}`);
       setFees((current) => current.filter((item) => item.id !== id));
     } catch (err) {
       alert('Unable to delete this fee right now.');

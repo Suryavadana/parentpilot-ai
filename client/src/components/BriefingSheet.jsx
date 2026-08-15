@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import axios from 'axios';
+import api from '../api';
 import '../App.css';
 
 const DAY_LABELS = [
@@ -66,10 +66,10 @@ function BriefingSheet() {
 
       try {
         const [childRes, scheduleRes, medicationsRes, doctorsRes] = await Promise.all([
-          axios.get(`/api/children/${id}`),
-          axios.get('/api/daily-schedule', { params: { childId: id } }),
-          axios.get('/api/medications', { params: { childId: id } }),
-          axios.get('/api/doctors', { params: { childId: id } }),
+          api.get(`/api/children/${id}`),
+          api.get('/api/daily-schedule', { params: { childId: id } }),
+          api.get('/api/medications', { params: { childId: id } }),
+          api.get('/api/doctors', { params: { childId: id } }),
         ]);
 
         if (cancelled) return;

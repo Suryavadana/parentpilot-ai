@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+import api from '../api';
 import '../App.css';
 
 const CATEGORY_LABELS = {
@@ -24,7 +24,7 @@ function CalendarImport() {
   useEffect(() => {
     const fetchChildren = async () => {
       try {
-        const response = await axios.get('/api/children');
+        const response = await api.get('/api/children');
         setChildren(response.data);
       } catch (err) {
         // Child dropdown is optional; leave it empty if it fails to load.
@@ -58,7 +58,7 @@ function CalendarImport() {
     setExtracting(true);
 
     try {
-      const response = await axios.post('/api/ai/extract-calendar', formData, {
+      const response = await api.post('/api/ai/extract-calendar', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
 
@@ -114,7 +114,7 @@ function CalendarImport() {
         // Saved one at a time (not Promise.all) so a single bad item can't
         // abort the rest — each success/failure is tracked independently.
         // eslint-disable-next-line no-await-in-loop
-        await axios.post('/api/events', {
+        await api.post('/api/events', {
           title: item.title.trim(),
           category: item.category,
           startDate: item.date,

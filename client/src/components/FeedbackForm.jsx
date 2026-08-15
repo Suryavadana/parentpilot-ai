@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+import api from '../api';
 import '../App.css';
 
 const emptyForm = {
@@ -26,7 +26,7 @@ function FeedbackForm({ feedbackId, onSaved }) {
   useEffect(() => {
     const fetchChildren = async () => {
       try {
-        const response = await axios.get('/api/children');
+        const response = await api.get('/api/children');
         setChildren(response.data);
       } catch (err) {
         // Children dropdown is required to submit; leave it empty if it fails to load.
@@ -48,7 +48,7 @@ function FeedbackForm({ feedbackId, onSaved }) {
       setError('');
 
       try {
-        const response = await axios.get(`/api/feedback/${feedbackId}`);
+        const response = await api.get(`/api/feedback/${feedbackId}`);
         const feedback = response.data;
 
         setFormData({
@@ -104,10 +104,10 @@ function FeedbackForm({ feedbackId, onSaved }) {
       };
 
       if (feedbackId) {
-        await axios.put(`/api/feedback/${feedbackId}`, payload);
+        await api.put(`/api/feedback/${feedbackId}`, payload);
         setSuccessMessage('Feedback updated successfully.');
       } else {
-        await axios.post('/api/feedback', payload);
+        await api.post('/api/feedback', payload);
         setSuccessMessage('Feedback created successfully.');
         setFormData(emptyForm);
       }
