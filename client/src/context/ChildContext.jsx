@@ -44,6 +44,14 @@ function ChildProvider({ children }) {
     };
   }, [token]);
 
+  const refetchChildren = async () => {
+    if (!token) return;
+
+    const response = await api.get('/api/children');
+    setChildrenList(response.data);
+    setSelectedChildId((current) => current ?? response.data[0]?.id ?? null);
+  };
+
   return (
     <ChildContext.Provider
       value={{
@@ -52,6 +60,7 @@ function ChildProvider({ children }) {
         setSelectedChildId,
         loading,
         hasChildren: childrenList.length > 0,
+        refetchChildren,
       }}
     >
       {children}

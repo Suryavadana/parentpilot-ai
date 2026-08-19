@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import api from '../api';
+import { useChild } from '../context/ChildContext';
 import '../App.css';
 
 const emptyForm = {
@@ -14,6 +15,7 @@ const emptyForm = {
 };
 
 function ChildForm({ childId, onSaved }) {
+  const { refetchChildren } = useChild();
   const [formData, setFormData] = useState(emptyForm);
   const [loading, setLoading] = useState(Boolean(childId));
   const [submitting, setSubmitting] = useState(false);
@@ -85,6 +87,7 @@ function ChildForm({ childId, onSaved }) {
         await api.post('/api/children', payload);
         setSuccessMessage('Child profile created successfully.');
         setFormData(emptyForm);
+        await refetchChildren();
       }
 
       if (onSaved) {
