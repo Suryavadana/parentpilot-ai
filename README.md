@@ -6,6 +6,15 @@ homework, fees, calendar events, medical records, and documents for every
 child in the family from one shared, role-aware dashboard — with an AI
 assistant that can answer questions and draft new entries on request.
 
+## Live Demo
+
+- **Frontend:** https://parentpilot-ai.vercel.app
+- **Backend API:** https://parentpilot-ai.onrender.com
+
+> **Note:** The backend runs on Render's free tier, which "sleeps" after periods of inactivity. The first request after being idle may take 30–60 seconds to respond while it wakes up — subsequent requests will be fast.
+
+> This is currently a live testing deployment for a personal learning/portfolio project, not a public launch.
+
 ## Features
 
 Grouped by what's actually implemented in the app, not aspirational scope.
@@ -67,24 +76,24 @@ Grouped by what's actually implemented in the app, not aspirational scope.
 **AI**: Google Gemini (`@google/genai`) — used for AI calendar image
 extraction and the AI Assistant's chat/tool-calling
 
-## Project Structure
+**Deployment**: Vercel (frontend), Render (backend), Neon (PostgreSQL)
 
-```
+## Project Structure
 parentpilot-ai/
-├── client/                 React + Vite frontend
-│   └── src/
-│       ├── components/     Pages and UI panels (one per feature area)
-│       ├── context/        AuthContext, ChildContext (React context providers)
-│       └── App.jsx         Route definitions
-└── server/                 Express + Prisma backend
-    ├── controllers/        Route handlers (one per resource)
-    ├── routes/             Express routers, mounted in index.js
-    ├── middleware/         requireAuth, attachFamily, requireRole
-    ├── lib/                Prisma client, Gemini client, encryption helpers
-    ├── prisma/             schema.prisma and the seed script
-    ├── scripts/            One-off setup/utility scripts
-    └── index.js            App entry point and route mounting
-```
+├── client/ React + Vite frontend
+│ └── src/
+│ ├── components/ Pages and UI panels (one per feature area)
+│ ├── context/ AuthContext, ChildContext (React context providers)
+│ └── App.jsx Route definitions
+└── server/ Express + Prisma backend
+├── controllers/ Route handlers (one per resource)
+├── routes/ Express routers, mounted in index.js
+├── middleware/ requireAuth, attachFamily, requireRole
+├── lib/ Prisma client, Gemini client, encryption helpers
+├── prisma/ schema.prisma and the seed script
+├── scripts/ One-off setup/utility scripts
+└── index.js App entry point and route mounting
+
 
 ## Getting Started
 
@@ -105,18 +114,15 @@ cd ../server && npm install
 ```
 
 ### 3. Set up a local Postgres database
-
 From `server/`, Prisma can spin up a local Postgres instance for you:
 ```bash
 npx prisma dev
 ```
 
 ### 4. Configure environment variables
-
 Create a `.env` file in `server/` with the following variables (see
 `server/scripts/generate-encryption-key.js` to generate a value for
 `DOCUMENT_ENCRYPTION_KEY`):
-
 - `DATABASE_URL`
 - `JWT_SECRET`
 - `GEMINI_API_KEY`
@@ -129,7 +135,6 @@ npm run db:reset
 ```
 
 ### 6. Start the dev servers
-
 In separate terminals:
 ```bash
 cd server && npm run dev
@@ -141,6 +146,8 @@ The client dev server proxies `/api` requests to the server (default
 
 ## Status
 
-This is a personal/learning project, currently in local development, with
-deployment in progress.
-The privacy policy at /privacy is a placeholder for this learning project — it will be updated before the app is made available to real users.
+This is a personal/learning project. It's deployed and live (see Live Demo
+above) — frontend on Vercel, backend on Render, database on Neon.
+
+The privacy policy at `/privacy` is a placeholder for this learning project —
+it will be updated before the app is made available to real users.
